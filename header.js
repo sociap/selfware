@@ -28,7 +28,7 @@ class Footer extends HTMLElement {
             <footer>
                 <div class="container">
                     <div class="footer-content">
-                        <div class="logo">Self<span>ware</span></div>
+                        <a href="/" style="color: inherit; text-decoration: none;"><div class="logo">Self<span>ware</span></div></a>
                         <p>&copy; 2026 Selfware. Todos os direitos reservados.</p>
                     </div>
                 </div>
@@ -39,3 +39,4 @@ class Footer extends HTMLElement {
 
 customElements.define('header-main', Header)
 customElements.define('footer-main', Footer)
+
