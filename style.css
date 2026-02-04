@@ -189,6 +189,34 @@ h1 span, h2 span {
     margin-bottom: 2.5rem;
 }
 
+/* Hero 2 */
+.hero2 {
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-top: 5rem;
+}
+
+.hero2-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    z-index: -1;
+    filter: blur(50px);
+}
+
+.hero2 p {
+    font-size: 1.2rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 2.5rem;
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
