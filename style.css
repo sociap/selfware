@@ -246,6 +246,84 @@ h1 span, h2 span {
     margin-top: 3rem;
 }
 
+/* Post */
+.post-header {
+    margin-bottom: 3rem;
+}
+
+.post-tag {
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.post-subtitle {
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.post-card {
+    padding: 3rem;
+    display: grid;
+    gap: 1.5rem;
+}
+
+.post-meta {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.post-list {
+    list-style: none;
+    display: grid;
+    gap: 1rem;
+}
+
+.post-list li {
+    display: grid;
+    gap: 0.4rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.post-footer {
+    color: var(--text-muted);
+}
+
+.post-listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.post-item {
+    padding: 2.5rem;
+    display: grid;
+    gap: 1.5rem;
+}
+
+.post-cover img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.post-info {
+    display: grid;
+    gap: 1rem;
+}
+
 .service-card {
     padding: 3rem 2rem;
     text-align: center;
@@ -346,5 +424,9 @@ footer p {
     
     h1 {
         font-size: 3rem;
+    }
+
+    .post-card {
+        padding: 2rem;
     }
 }
