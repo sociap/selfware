@@ -13,6 +13,7 @@ class Header extends HTMLElement {
                         <li style="align-self: anchor-center;"><a href="/#concept">Conceito</a></li>
                         <li style="align-self: anchor-center;"><a href="/#services">Serviços</a></li>
                         <li style="align-self: anchor-center;"><a href="/post.html">Posts</a></li>
+                        <li style="align-self: anchor-center;"><a href="/videos.html">Vídeos</a></li>
                         <li style="align-self: anchor-center;"><a href="/#contact">Contato</a></li>
                         <li><a class="btn btn-primary nav-login" href="https://sociap.io/login" target="_blank" style="color:black" rel="noopener noreferrer">Login</a></li>
                     </ul>
