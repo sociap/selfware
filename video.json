@@ -1,0 +1,42 @@
+[
+    {
+        "title": "IA aplicada ao atendimento: o playbook Selfware",
+        "category": "IA aplicada ao B2B",
+        "duration": "12 min",
+        "description": "Como estruturar chatbots e copilotos inteligentes para reduzir tempo de resposta sem perder personalização.",
+        "speaker": "Camila Rocha",
+        "date": "Março 2026",
+        "thumbnail": "media/post-ia-automacao.svg",
+        "url": "https://www.youtube.com/watch?v=1Y2b7C2z1bA"
+    },
+    {
+        "title": "Arquitetura escalável para SaaS em crescimento",
+        "category": "Arquitetura & Crescimento",
+        "duration": "18 min",
+        "description": "Checklist visual para preparar a sua stack para novos picos de demanda e integrações.",
+        "speaker": "Rafael Dias",
+        "date": "Fevereiro 2026",
+        "thumbnail": "media/post-architecture.svg",
+        "url": "https://www.youtube.com/watch?v=DLzxrzFCyOs"
+    },
+    {
+        "title": "Software house como parceiro estratégico",
+        "category": "Guia Estratégico",
+        "duration": "9 min",
+        "description": "O que avaliar na contratação e como acelerar entregas com squads dedicados.",
+        "speaker": "Juliana Mendes",
+        "date": "Janeiro 2026",
+        "thumbnail": "media/post-software-house.svg",
+        "url": "https://www.youtube.com/watch?v=oHg5SJYRHA0"
+    },
+    {
+        "title": "Redução de custos com automações inteligentes",
+        "category": "Eficiência Operacional",
+        "duration": "14 min",
+        "description": "Casos reais de automação com IA generativa para reduzir retrabalho e aumentar previsibilidade.",
+        "speaker": "Thiago Leal",
+        "date": "Dezembro 2025",
+        "thumbnail": "media/post-costs.svg",
+        "url": "https://www.youtube.com/watch?v=9bZkp7q19f0"
+    }
+]
