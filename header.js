@@ -34,10 +34,12 @@ class Footer extends HTMLElement {
                     </div>
                 </div>
             </footer>
+            <script src="https://analytics.ahrefs.com/analytics.js" data-key="0ERg0NEvo0G39EZJTWa5ag" async></script>
         `;
     }
 }
 
 customElements.define('header-main', Header)
 customElements.define('footer-main', Footer)
+
 
