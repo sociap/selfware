@@ -592,3 +592,45 @@ footer p {
         height: 220px;
     }
 }
+
+/* Payments */
+.payment-section {
+    padding-top: 11rem;
+}
+
+.payment-subtitle {
+    margin-bottom: 1.5rem;
+    color: var(--text-muted);
+}
+
+.project-reference {
+    margin-bottom: 2rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    text-align: center;
+    background: rgba(0, 242, 255, 0.08);
+}
+
+.payment-options {
+    display: grid;
+    gap: 1rem;
+}
+
+.payment-card {
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+}
+
+.payment-card h2 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.payment-price {
+    margin-bottom: 1rem;
+    color: var(--accent-color);
+    font-size: 1.25rem;
+    font-weight: 700;
+}
