@@ -709,6 +709,16 @@ footer p {
     color: var(--text-muted);
 }
 
+.price-highlight p {
+    margin: 0.15rem 0;
+    color: var(--text-muted);
+}
+
+.price-highlight p span {
+    display: inline;
+    text-decoration: line-through;
+}
+
 .price-highlight strong {
     font-size: 2rem;
     line-height: 1.1;
