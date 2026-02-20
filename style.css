@@ -680,6 +680,13 @@ footer p {
 
 .landing-hero-content {
     display: grid;
+    grid-template-columns: minmax(0, 1fr) 420px;
+    gap: 2rem;
+    align-items: end;
+}
+
+.landing-hero-copy {
+    display: grid;
     gap: 1.2rem;
 }
 
@@ -700,13 +707,27 @@ footer p {
     width: fit-content;
     padding: 1rem 1.5rem;
     border-radius: 14px;
-    margin-top: 1rem;
+}
+
+.landing-price-highlight {
+    justify-self: end;
+    align-self: end;
 }
 
 .price-highlight span,
 .price-highlight small {
     display: block;
     color: var(--text-muted);
+}
+
+.price-highlight p {
+    margin: 0.15rem 0;
+    color: var(--text-muted);
+}
+
+.price-highlight p span {
+    display: inline;
+    text-decoration: line-through;
 }
 
 .price-highlight strong {
@@ -738,6 +759,15 @@ footer p {
 }
 
 @media (max-width: 768px) {
+    .landing-hero-content {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+    }
+
+    .landing-price-highlight {
+        justify-self: start;
+    }
+
     .price-highlight strong {
         font-size: 1.6rem;
     }
