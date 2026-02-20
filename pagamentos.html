@@ -49,9 +49,10 @@
     <script>
         const projectReference = document.getElementById('project-reference');
         if (projectReference) {
+            //? `Projeto #${projectId} criado com sucesso.`
             const projectId = new URLSearchParams(window.location.search).get('projectId');
             projectReference.textContent = projectId
-                ? `Projeto #${projectId} criado com sucesso.`
+                ? `Projeto criado com sucesso.`
                 : 'Projeto sem identificação. Volte para a página inicial e envie o formulário.';
         }
     </script>
