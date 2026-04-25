@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selfware | LLM Wiki</title>
+    <meta name="description"
+        content="Entenda o conceito de LLM Wiki proposto por Andrej Karpathy e como transformar documentos soltos em uma base de conhecimento viva e acumulativa.">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="/header.js"></script>
+</head>
+
+<body class="dark-theme">
+
+    <header-main></header-main>
+
+    <header class="hero2">
+        <div class="hero2-glow"></div>
+        <div class="container">
+            <h1 class="fade-in">LLM Wiki: de respostas pontuais para <span>conhecimento que acumula</span></h1>
+            <p class="fade-in-delayed">Uma leitura prática da proposta de Andrej Karpathy para transformar RAG em um sistema de memória viva em Markdown.</p>
+            <div class="hero2-actions fade-in-delayed">
+                <a href="../index.html#contact" class="btn btn-primary">Falar com a Selfware</a>
+                <a href="../post.html" class="btn btn-outline">Ver todos os posts</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="section bg-alt">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">IA aplicada ao B2B</p>
+                    <h2 class="section-title">O problema: RAG responde, mas não aprende</h2>
+                    <p class="post-subtitle">No modelo tradicional, a IA precisa redescobrir o contexto a cada pergunta.</p>
+                </div>
+                <article class="post-card glass">
+                    <div class="post-meta">
+                        <span>Leitura de 7 min</span>
+                        <span>•</span>
+                        <span>Atualizado em 2026</span>
+                    </div>
+                    <p>No gist “LLM Wiki”, Karpathy argumenta que a maioria dos fluxos com documentos funciona como um RAG reativo: o sistema busca trechos e gera uma resposta, mas esse trabalho não vira ativo persistente.</p>
+                    <p>A proposta muda o jogo: em vez de consultar apenas documentos brutos, o LLM mantém uma wiki viva, com páginas interligadas, síntese contínua e histórico de evolução.</p>
+                    <ul class="post-list">
+                        <li><strong>RAG clássico:</strong> resolve a pergunta do momento.</li>
+                        <li><strong>LLM Wiki:</strong> melhora a base de conhecimento a cada nova fonte e a cada nova pergunta.</li>
+                    </ul>
+                    <p class="post-footer">Resumo em uma frase: menos “chat efêmero”, mais “base acumulativa de inteligência”.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section bg-alt-dark">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">Arquitetura</p>
+                    <h2 class="section-title">Os 3 blocos do LLM Wiki</h2>
+                    <p class="post-subtitle">A estrutura é simples e pode ser adotada por times pequenos com baixo custo operacional.</p>
+                </div>
+                <article class="post-card glass">
+                    <ol class="post-list">
+                        <li><strong>Raw sources:</strong> documentos originais e imutáveis (artigos, notas, reuniões, PDFs).</li>
+                        <li><strong>Wiki:</strong> camada em Markdown que o LLM escreve e mantém (entidades, conceitos, sínteses, comparações).</li>
+                        <li><strong>Schema:</strong> regras de operação (em AGENTS.md/CLAUDE.md) para garantir consistência de formato, links e atualização.</li>
+                    </ol>
+                    <p>Essa separação reduz ambiguidade: o bruto vira fonte de verdade; a wiki vira camada de trabalho; o schema vira governança.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section bg-alt">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">Operação contínua</p>
+                    <h2 class="section-title">O ciclo operacional: ingest, query, lint</h2>
+                    <p class="post-subtitle">Três rotinas para manter a qualidade do conhecimento ao longo do tempo.</p>
+                </div>
+                <article class="post-card glass">
+                    <ul class="post-list">
+                        <li><strong>Ingest:</strong> ao entrar nova fonte, o LLM resume, atualiza páginas relacionadas, cria links e registra log.</li>
+                        <li><strong>Query:</strong> perguntas são respondidas a partir da wiki; respostas valiosas voltam para a própria wiki.</li>
+                        <li><strong>Lint:</strong> checagem periódica para achar contradições, conteúdo desatualizado, páginas órfãs e lacunas.</li>
+                    </ul>
+                    <p>Esse loop transforma uma coleção de arquivos em um sistema de aprendizado organizacional com melhoria incremental.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section bg-alt-dark">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">Aplicação prática</p>
+                    <h2 class="section-title">Como aplicar em empresas B2B sem virar projeto infinito</h2>
+                    <p class="post-subtitle">Comece pequeno, com governança clara e impacto visível.</p>
+                </div>
+                <article class="post-card glass">
+                    <ul class="post-list">
+                        <li><strong>Semana 1:</strong> defina escopo (ex.: playbook comercial, documentação de produto ou onboarding técnico).</li>
+                        <li><strong>Semana 2:</strong> formalize schema de páginas, padrão de links, política de citações e log de mudanças.</li>
+                        <li><strong>Semana 3:</strong> rode ingest guiado com 10 a 20 fontes de alta relevância e faça revisão humana leve.</li>
+                        <li><strong>Semana 4:</strong> habilite query para o time e execute um lint semanal para manter a wiki saudável.</li>
+                    </ul>
+                    <p class="post-footer">Sinal de sucesso: menos retrabalho para localizar contexto e mais velocidade em decisões com base em histórico confiável.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container center">
+                <h2 class="impact-phrase">
+                    "LLM Wiki não é só uma técnica de busca: é um modelo de operação para converter informação dispersa em <span>memória estratégica viva</span>."
+                </h2>
+            </div>
+        </section>
+    </main>
+
+    <footer-main></footer-main>
+    <script src="/main.js"></script>
+</body>
+
+</html>
