@@ -776,3 +776,38 @@ footer p {
         padding-top: 7.5rem;
     }
 }
+
+@media (max-width: 900px) {
+    .hero2 {
+        min-height: 78vh;
+        height: auto;
+        padding-top: 8.5rem;
+        padding-bottom: 3rem;
+    }
+
+    .glass-nav .nav-links {
+        right: 1rem;
+        left: 1rem;
+        min-width: auto;
+    }
+
+    .hero2-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: stretch;
+    }
+}
+
+.step-cta {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    background: rgba(0, 242, 255, 0.06);
+}
+
+.step-cta p {
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
