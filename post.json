@@ -1,0 +1,170 @@
+[
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "Como transformar o hype de IA em vantagem competitiva real",
+    "subtitle": "Sete lições práticas para tratar IA como meio estratégico, redesenhar processos e medir impacto real no negócio.",
+    "href": "post/ia-vantagem-competitiva-real.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre IA como vantagem competitiva para organizações"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "O risco que a velocidade esconde no desenvolvimento de software com IA",
+    "subtitle": "Produtividade sem governança pode gerar vulnerabilidades, vazamento de contexto e dívida técnica silenciosa.",
+    "href": "post/velocidade-ia-risco-governanca.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre risco e governança no desenvolvimento com IA"
+  },
+  {
+    "tag": "Engenharia de Software",
+    "title": "Da era do código para a era da especificação",
+    "subtitle": "Por que a IA muda o gargalo da engenharia: menos esforço para codificar e mais exigência para definir corretamente o que construir.",
+    "href": "post/o-fim-do-codigo-como-centro.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre engenharia de software orientada por especificação na era da IA"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "A importância da implementação de um bom Quality Gate para o desenvolvimento com IA",
+    "subtitle": "Por que critérios de validação são essenciais para escalar automações com segurança, consistência e previsibilidade.",
+    "href": "post/quality-gate-ia.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre Quality Gate no desenvolvimento com IA"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "Revolução agêntica: quando agentes passam a representar usuários",
+    "subtitle": "Entenda como delegar comércio, saúde e interações para agentes com limites claros de autonomia.",
+    "href": "post/revolucao-agentica.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre agentes autônomos e guardrails de IA"
+  },
+  {
+    "tag": "Livros de Negócios",
+    "title": "The Power of Full Engagement",
+    "subtitle": "Lições de Jim Loehr e Tony Schwartz para gerenciar energia, manter alta performance e evitar esgotamento.",
+    "href": "post/the-power-of-full-engagement.html",
+    "image": "media/post-costs.svg",
+    "imageAlt": "Ilustração sobre gestão de energia e alta performance sustentável"
+  },
+  {
+    "tag": "Operação & Escala",
+    "title": "Squad as a Service: o fim do headcount como métrica de crescimento",
+    "subtitle": "Descubra por que empresas modernas medem capacidade entregue, previsibilidade e impacto em negócio no lugar de tamanho de time.",
+    "href": "post/squad-as-a-service-headcount.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre Squad as a Service e crescimento orientado por performance"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "LLM Wiki: de respostas pontuais para conhecimento que acumula",
+    "subtitle": "Uma visão prática da proposta de Karpathy para transformar documentos soltos em memória organizacional viva.",
+    "href": "post/llm-wiki.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre LLM Wiki e base de conhecimento com IA"
+  },
+  {
+    "tag": "Growth & Vendas B2B",
+    "title": "Squad de SEO: transforme conteúdo em crescimento",
+    "subtitle": "Entenda a importância de uma célula dedicada de SEO e como IA acelera tráfego qualificado e conversão.",
+    "href": "post/squad-seo-ia.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre estratégia e operação de Squad de SEO"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "Harness IA: transforme pilotos em operação confiável",
+    "subtitle": "Como criar uma camada de controle para escalar IA com segurança, qualidade e melhoria contínua.",
+    "href": "post/harness-ia.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre governança e operação de IA com Harness IA"
+  },
+  {
+    "tag": "Livros de Negócios",
+    "title": "Receitas Previsíveis: resumo prático",
+    "subtitle": "Os pilares para estruturar prospecção, qualificação e fechamento em um motor comercial escalável.",
+    "href": "post/receitas-previsiveis.html",
+    "image": "media/post-costs.svg",
+    "imageAlt": "Ilustração sobre previsibilidade de receitas e processo de vendas"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "SDD Agent Team: estratégia para times de agentes de IA",
+    "subtitle": "Um framework prático para organizar agentes com governança, métricas e foco em decisão de negócio.",
+    "href": "post/sdd-agent-team.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre estratégia de agentes de IA"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "AIOX Squad: o time que transforma IA em operação",
+    "subtitle": "Como estruturar uma célula enxuta para priorizar automações e gerar ganhos reais de produtividade.",
+    "href": "post/aiox-squad.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre squad de IA e operações"
+  },
+  {
+    "tag": "Growth & Vendas B2B",
+    "title": "Como otimizar a captação de leads",
+    "subtitle": "Um guia prático para atrair leads qualificados, melhorar a conversão e criar um pipeline previsível.",
+    "href": "post/como-otimizar-captacao-de-leads.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre funil de captação de leads"
+  },
+  {
+    "tag": "Livros de Negócios",
+    "title": "A arte de gastar dinheiro",
+    "subtitle": "Lições de Morgan Housel para gastar com intenção, reduzir arrependimentos e construir conforto financeiro.",
+    "href": "post/a-arte-de-gastar-dinheiro.html",
+    "image": "media/post-costs.svg",
+    "imageAlt": "Ilustração sobre decisões financeiras e consumo consciente"
+  },
+  {
+    "tag": "Livros de Negócios",
+    "title": "O mesmo de sempre",
+    "subtitle": "Resumo com os principais padrões humanos de risco, incerteza e tomada de decisão descritos por Morgan Housel.",
+    "href": "post/o-mesmo-de-sempre.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre padrões recorrentes em comportamento e risco"
+  },
+  {
+    "tag": "Automação para PMEs",
+    "title": "Guia de Automação para PMEs",
+    "subtitle": "Processos prioritários, roteiro de implementação e métricas para comprovar resultados.",
+    "href": "post/guia-automacao-para-pmes.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre automação para PMEs"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
+    "title": "O que dá pra automatizar com IA em uma empresa B2B?",
+    "subtitle": "Ideias práticas de automação para vendas, operações, financeiro e atendimento.",
+    "href": "post/o-que-da-para-automatizar-com-ia-em-uma-empresa-b2b.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre automações com IA em empresas B2B"
+  },
+  {
+    "tag": "Eficiência Operacional",
+    "title": "Como o software certo reduz custos operacionais nas empresas",
+    "subtitle": "A automação e a integração certas para diminuir desperdícios e aumentar previsibilidade.",
+    "href": "post/como-software-reduz-custos-operacionais.html",
+    "image": "media/post-costs.svg",
+    "imageAlt": "Ilustração sobre redução de custos operacionais com software"
+  },
+  {
+    "tag": "Arquitetura & Crescimento",
+    "title": "Arquitetura de software escalável: como preparar seu sistema para crescer",
+    "subtitle": "Princípios, checklist e práticas para manter performance e resiliência enquanto o volume aumenta.",
+    "href": "post/arquitetura-software-escalavel.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração abstrata sobre arquitetura de software escalável"
+  },
+  {
+    "tag": "Guia Estratégico",
+    "title": "Como escolher uma software house",
+    "subtitle": "Critérios objetivos para selecionar um parceiro que entregue evolução contínua.",
+    "href": "post/como-escolher-uma-software-house.html",
+    "image": "media/post-software-house.svg",
+    "imageAlt": "Ilustração sobre parceria estratégica com software house"
+  }
+]
