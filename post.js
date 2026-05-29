@@ -1,4 +1,4 @@
-const POSTS_PER_PAGE = 6;
+const POSTS_PER_PAGE = 9;
 const postListing = document.getElementById('post-listing');
 const postStatus = document.getElementById('post-status');
 const postPagination = document.getElementById('post-pagination');
