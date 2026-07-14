@@ -1,6 +1,14 @@
 [
   {
     "tag": "Growth & Vendas B2B",
+    "title": "AIO e GEO: estratégias de marketing digital para a era da IA",
+    "subtitle": "Como preparar seu conteúdo para ser compreendido e recomendado por inteligências artificiais.",
+    "href": "post/aio-geo-estrategias-marketing-digital-ia.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre AIO e GEO como estratégias de marketing digital para IA"
+  },
+  {
+    "tag": "Growth & Vendas B2B",
     "title": "GEO: dando visibilidade do seu negócio nos modelos de IA",
     "subtitle": "Como preparar sua marca para ser entendida, citada e recomendada por assistentes e mecanismos generativos.",
     "href": "post/geo-visibilidade-negocio-modelos-ia.html",
