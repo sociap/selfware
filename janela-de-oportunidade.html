@@ -420,7 +420,6 @@
 
 <script>
 (function () {
-  const STORE = 'hf.janela.oportunidade';
   const frames = Array.from(document.querySelectorAll('.frame'));
   const total = frames.length;
   const counter = document.getElementById('counter');
@@ -433,9 +432,6 @@
   let frameStart = Date.now();
   let timer;
 
-  function persist() {
-    try { localStorage.setItem(STORE, JSON.stringify({ i: i, playing: playing })); } catch (e) {}
-  }
   function schedule() {
     clearTimeout(timer);
     const d = Number(frames[i].dataset.duration) || 3000;
@@ -446,7 +442,6 @@
     frames.forEach(function (f, k) { f.classList.toggle('active', k === i); });
     counter.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
     frameStart = Date.now();
-    persist();
     if (playing) schedule();
   }
   function tick() {
@@ -468,7 +463,6 @@
     playing = !playing;
     playBtn.textContent = playing ? '⏸' : '▶';
     if (playing) { frameStart = Date.now(); schedule(); } else { clearTimeout(timer); }
-    persist();
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'ArrowRight') show(i + 1);
@@ -477,20 +471,10 @@
   });
   frames.forEach(function (f) {
     f.addEventListener('click', function (e) {
-      if (e.target.closest('a.cta')) { e.preventDefault(); /* destino final */ return; }
+      if (e.target.closest('a.cta')) { return; }
       show(i + 1);
     });
   });
-
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
-    if (saved && saved.i >= 0 && saved.i < total) {
-      i = saved.i;
-      playing = saved.playing !== false;
-      frames.forEach(function (f, k) { f.classList.toggle('active', k === i); });
-      counter.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
-    }
-  } catch (e) {}
 
   playBtn.textContent = playing ? '⏸' : '▶';
   frameStart = Date.now();
