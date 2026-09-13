@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Estamos em uma janela de oportunidade · Hyperframes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- Self-contained: no CDN scripts or webfont fetches. Canvas fixo 1920x1080,
+     escalado via JS para caber na janela de preview; frame overlay para render
+     Remotion/Hyperframes. -->
+<style>
+  :root {
+    --bg: oklch(0.12 0 0);
+    --bg-2: oklch(0.15 0 0);
+    --fg: oklch(0.97 0 0);
+    --muted: oklch(0.71 0 0);
+    --faint: oklch(0.47 0 0);
+    --line: oklch(0.32 0 0);
+    --accent: oklch(0.87 0.15 202);
+    --accent-soft: oklch(0.87 0.15 202 / 0.14);
+    --font-display: 'Bahnschrift', 'Segoe UI Variable Display', 'Avenir Next', system-ui, sans-serif;
+    --font-body: -apple-system, 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'Cascadia Code', Consolas, 'JetBrains Mono', ui-monospace, monospace;
+    --font-ser: Georgia, 'Times New Roman', serif;
+  }
+  html, body { margin: 0; background: #000; overflow: hidden; }
+  body { font-family: var(--font-body); color: var(--fg); -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  #stage { position: fixed; inset: 0; background: #000; }
+  #comp { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+
+  .frame { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity .6s ease; pointer-events: none; overflow: hidden; background: radial-gradient(120% 90% at 50% 0%, var(--bg-2), var(--bg) 62%), var(--bg); }
+  .frame.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+  .grid::before { content: ""; position: absolute; inset: 0; opacity: 0.05; background-image: linear-gradient(var(--fg) 1px, transparent 1px), linear-gradient(90deg, var(--fg) 1px, transparent 1px); background-size: 64px 64px; }
+
+  .scene { position: absolute; inset: 0; z-index: 0; }
+  .glow { position: absolute; width: 900px; height: 900px; border-radius: 50%; filter: blur(150px); pointer-events: none; animation: breathe 5s ease-in-out infinite; }
+
+  /* —— hierarquia de texto —— */
+  .content { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 130px; text-align: center; }
+  .content.left { align-items: flex-start; text-align: left; }
+  h1 { font-family: var(--font-display); font-weight: 700; line-height: 0.97; letter-spacing: -0.03em; margin: 0; font-size: 120px; max-width: 1660px; }
+  .megatype h1 { font-size: 168px; }
+  .small h1 { font-size: 96px; }
+  .em { font-family: var(--font-ser); font-style: italic; font-weight: 700; color: var(--accent); letter-spacing: -0.01em; }
+  .strike { text-decoration: line-through; text-decoration-thickness: 6px; text-decoration-color: var(--faint); color: var(--muted); }
+  .kicker { font-family: var(--font-mono); font-size: 17px; letter-spacing: 0.42em; text-transform: uppercase; color: var(--accent); margin-bottom: 26px; }
+  .kicker.plain { color: var(--muted); }
+  .note { position: absolute; left: 70px; right: 70px; bottom: 62px; z-index: 3; display: flex; justify-content: center; font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.14em; color: var(--faint); text-transform: uppercase; text-align: center; }
+  .note b { color: var(--accent); font-weight: 600; }
+
+  .num { position: absolute; top: 46px; left: 70px; z-index: 5; font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.2em; color: var(--faint); }
+  .brand { position: absolute; top: 46px; right: 70px; z-index: 5; font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.2em; color: var(--faint); }
+
+  /* —— entrada animada por quadro —— */
+  .rise { opacity: 0; }
+  .frame.active .rise { animation: rise .8s cubic-bezier(.16,1,.3,1) both; }
+  .frame.active .rise-2 { animation-delay: .12s; }
+  .frame.active .rise-3 { animation-delay: .24s; }
+  .frame.active .rise-4 { animation-delay: .36s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+
+  /* —— motivos —— */
+  .door { position: absolute; left: 50%; top: 50%; width: 340px; height: 560px; transform: translate(-50%, -50%); border: 1px solid var(--line); box-shadow: 0 0 90px var(--accent-soft), inset 0 0 110px var(--accent-soft); background: linear-gradient(180deg, transparent 30%, var(--accent-soft)); }
+  .door::before { content: ""; position: absolute; top: -16px; left: -24px; right: -24px; height: 2px; background: var(--line); }
+  .door::after { content: ""; position: absolute; left: 50%; top: -46px; width: 2px; height: 46px; background: var(--line); }
+  .win { position: absolute; left: 50%; top: 50%; width: 620px; height: 700px; transform: translate(-50%, -50%); border: 1px solid var(--line); box-shadow: 0 0 120px var(--accent-soft), inset 0 0 130px var(--accent-soft); background: linear-gradient(180deg, var(--accent-soft) 0%, transparent 45%); opacity: .9; }
+  .win::before { content: ""; position: absolute; top: -60px; left: -120px; right: -120px; height: 2px; background: var(--line); }
+  .win::after { content: ""; position: absolute; left: 50%; top: -112px; width: 2px; height: 112px; background: var(--line); }
+  .rail { position: absolute; left: 460px; right: 460px; bottom: 250px; height: 2px; background: var(--line); z-index: 2; }
+  .rail i { position: absolute; top: -6px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 2px solid var(--faint); }
+  .rail i.on { border-color: var(--accent); box-shadow: 0 0 22px var(--accent); }
+  .rail i:nth-child(1) { left: 0; } .rail i:nth-child(2) { left: 50%; } .rail i:nth-child(3) { left: 100%; }
+  .rail span { position: absolute; top: 30px; font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+  .rail span.l0 { left: 0; transform: translateX(-20%); } .rail span.l1 { left: 50%; transform: translateX(-30%); } .rail span.l2 { left: 100%; transform: translateX(-90%); }
+  .rail span.on { color: var(--accent); }
+  .phone { position: absolute; right: 130px; top: 50%; transform: translateY(-50%); width: 250px; height: 500px; border: 1.5px solid var(--line); border-radius: 38px; box-shadow: 0 0 90px var(--accent-soft), inset 0 0 90px var(--accent-soft); }
+  .phone::after { content: ""; position: absolute; left: 50%; top: 56px; transform: translateX(-50%); width: 150px; height: 22px; border-radius: 20px; background: var(--line); }
+
+  /* —— painéis antes / agora —— */
+  .split { display: grid; grid-template-columns: 1fr 1fr; width: 1560px; max-width: 1560px; border-top: 1px solid var(--line); }
+  .side { padding: 56px 48px 40px 0; }
+  .side + .side { border-left: 1px solid var(--line); padding-left: 56px; }
+  .side h2 { font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--muted); margin: 0 0 30px; }
+  .side.now h2 { color: var(--accent); }
+  .side p { font-family: var(--font-display); font-weight: 700; font-size: 66px; line-height: 1.02; letter-spacing: -0.02em; margin: 0 0 34px; }
+  .side.now p { color: var(--fg); }
+  .side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+  .side li { font-family: var(--font-mono); font-size: 19px; letter-spacing: 0.06em; color: var(--faint); }
+  .side.now li { color: var(--accent); }
+  .side.now .big { font-family: var(--font-ser); font-style: italic; font-weight: 700; color: var(--accent); font-size: 40px; letter-spacing: 0; margin-top: 22px; line-height: 1.25; }
+  .arrow { font-size: 60px; color: var(--accent); margin: 40px 0 0; font-family: var(--font-display); font-weight: 700; }
+
+  /* —— escolhas (frame 15) —— */
+  .rows { display: flex; flex-direction: column; gap: 18px; width: 1500px; }
+  .row { display: flex; align-items: center; gap: 34px; padding: 0 0 0 0; }
+  .row .tag { font-family: var(--font-mono); font-size: 20px; letter-spacing: 0.35em; text-transform: uppercase; width: 330px; text-align: right; }
+  .row.wait .tag { color: var(--faint); }
+  .row.build .tag { color: var(--accent); }
+  .row .bar { height: 3px; width: 74px; background: var(--line); }
+  .row.build .bar { background: var(--accent); box-shadow: 0 0 18px var(--accent); }
+  .row .txt { font-family: var(--font-display); font-weight: 700; font-size: 76px; letter-spacing: -0.02em; line-height: 1; color: var(--muted); }
+  .row.build .txt { color: var(--fg); }
+
+  /* —— quotes (frame 12) —— */
+  .twoq { display: flex; flex-direction: column; gap: 44px; }
+  .q { font-family: var(--font-display); font-weight: 700; font-size: 74px; letter-spacing: -0.02em; line-height: 1.04; color: var(--muted); }
+  .q b { color: var(--fg); }
+  .q.next { color: var(--fg); }
+  .q b.nextacc { color: var(--accent); }
+
+  /* —— chips (frame 13) —— */
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; max-width: 1580px; }
+  .chip { font-family: var(--font-mono); font-size: 21px; letter-spacing: 0.08em; color: var(--fg); border: 1px solid var(--line); padding: 14px 26px; border-radius: 999px; background: oklch(0.18 0 0 / 0.6); }
+  .chip.on { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 24px var(--accent-soft); }
+
+  /* —— CTA —— */
+  .cta { margin-top: 56px; display: inline-flex; align-items: center; gap: 18px; font-family: var(--font-display); font-weight: 700; font-size: 42px; letter-spacing: -0.01em; color: var(--bg); background: var(--accent); padding: 22px 54px; border-radius: 8px; box-shadow: 0 12px 60px var(--accent-soft); }
+
+  /* —— controles / progresso —— */
+  #progress { position: absolute; top: 0; left: 0; height: 3px; width: 0%; background: var(--accent); box-shadow: 0 0 14px var(--accent); z-index: 60; }
+  .controls { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 80; display: flex; align-items: center; gap: 14px; padding: 10px 18px; border-radius: 999px; background: rgba(8,9,10,0.72); backdrop-filter: blur(12px); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.12em; color: var(--muted); }
+  .controls button { background: none; border: none; color: var(--fg); cursor: pointer; opacity: 0.7; font-size: 16px; padding: 6px 4px; min-width: 34px; }
+  .controls button:hover { opacity: 1; color: var(--accent); }
+  .controls span { opacity: 0.6; min-width: 84px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <div id="comp">
+    <div id="progress" style="width:0%"></div>
+
+    <!-- 01 · HOOK -->
+    <section class="frame active megatype" data-duration="4200" data-od-id="frame-01-hook">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.32); left:50%; top:54%; transform:translate(-50%,-50%);"></div><div class="door"></div></div>
+      <div class="num">FRAME 01 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">O momento</div>
+        <h1 class="rise rise-2">Estamos em uma <span class="em">janela de oportunidade</span>.</h1>
+      </div>
+      <div class="note rise rise-3">internet · smartphone · inteligência artificial → <b>agora</b></div>
+      <!-- frame:1 duration:4200 transition:fade -->
+    </section>
+
+    <!-- 02 · A REGRA -->
+    <section class="frame" data-duration="3200" data-od-id="frame-02-regra">
+      <div class="scene"><div class="glow" style="background:oklch(0.5 0 0 / 0.5); top:-300px; left:-300px;"></div></div>
+      <div class="num">FRAME 02 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A regra</div>
+        <h1 class="rise rise-2">Algumas tecnologias mudam <span class="em">quem pode jogar</span>.</h1>
+        <div class="note" style="position:static; margin-top:44px; color:var(--muted); z-index:2; font-size:18px;">não apenas melhoram ferramentas — mudam quem participa do jogo</div>
+      </div>
+      <div class="note">barreiras · custo de entrada · acesso</div>
+      <!-- frame:2 duration:3200 transition:fade -->
+    </section>
+
+    <!-- 03 · RUPTURA 01 · INTERNET -->
+    <section class="frame grid" data-duration="3400" data-od-id="frame-03-internet">
+      <div class="num">FRAME 03 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="rail rise rise-2"><i class="on"></i><i></i><i></i><span class="l0 on">internet</span><span class="l1">smartphone</span><span class="l2">IA + agentes</span></div>
+      <div class="content">
+        <div class="kicker rise">Ruptura · 01</div>
+        <h1 class="rise rise-2">A <span class="em">internet</span> foi uma ruptura.</h1>
+      </div>
+      <div class="note rise rise-3">informação · comunicação · distribuição — <b>as distâncias desapareceram</b></div>
+      <!-- frame:3 duration:3400 transition:fade -->
+    </section>
+
+    <!-- 04 · GOOGLE & AMAZON -->
+    <section class="frame" data-duration="3000" data-od-id="frame-04-gigantes">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.22); bottom:-260px; right:-200px;"></div></div>
+      <div class="num">FRAME 04 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker plain rise">Nova economia</div>
+        <h1 class="rise rise-2">Nasceram <span class="em">Google</span> e <span class="em">Amazon</span>.</h1>
+        <div style="font-family:var(--font-mono); font-size:18px; margin-top:40px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted);" class="rise rise-3">negócios que ajudaram a definir a nova economia</div>
+      </div>
+      <div class="note"><b>*</b> &nbsp;antes concentradas em poucos lugares</div>
+      <!-- frame:4 duration:3000 transition:fade -->
+    </section>
+
+    <!-- 05 · RUPTURA 02 · SMARTPHONE -->
+    <section class="frame grid" data-duration="3400" data-od-id="frame-05-smartphone">
+      <div class="scene"><div class="phone rise rise-3"></div></div>
+      <div class="num">FRAME 05 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content left">
+        <div class="kicker rise">Ruptura · 02</div>
+        <h1 class="rise rise-2">O <span class="em">smartphone</span><br/>foi outra ruptura.</h1>
+        <div style="font-family:var(--font-mono); font-size:18px; margin-top:40px; letter-spacing:0.08em; color:var(--muted);" class="rise rise-3">câmera · GPS · internet · apps · acesso permanente</div>
+      </div>
+      <div class="note rise rise-4">um computador no bolso de bilhões de pessoas</div>
+      <!-- frame:5 duration:3400 transition:fade -->
+    </section>
+
+    <!-- 06 · PLATAFORMAS -->
+    <section class="frame" data-duration="3000" data-od-id="frame-06-plataformas">
+      <div class="scene"><div class="glow" style="background:oklch(0.5 0 0 / 0.45); top:-250px; right:-250px;"></div></div>
+      <div class="num">FRAME 06 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content small">
+        <div class="kicker plain rise">Novas plataformas</div>
+        <h1 class="rise rise-2">Nasceram <span class="em">Facebook, Uber, Instagram, Airbnb</span>.</h1>
+        <div style="font-family:var(--font-mono); font-size:18px; margin-top:40px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted);" class="rise rise-3">…e tantas outras, em torno dessa nova realidade</div>
+      </div>
+      <div class="note">regra: barreiras caem → novas possibilidades aparecem</div>
+      <!-- frame:6 duration:3000 transition:fade -->
+    </section>
+
+    <!-- 07 · RUPTURA 03 · IA -->
+    <section class="frame grid" data-duration="4200" data-od-id="frame-07-ia">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.26); left:50%; top:50%; transform:translate(-50%,-50%);"></div></div>
+      <div class="num">FRAME 07 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="rail rise rise-2"><i></i><i></i><i class="on"></i><span class="l0">internet</span><span class="l1">smartphone</span><span class="l2 on">IA + agentes</span></div>
+      <div class="content">
+        <div class="kicker rise">Ruptura · 03</div>
+        <h1 class="rise rise-2">A IA é a próxima ruptura — com uma <span class="em">diferença fundamental</span>.</h1>
+      </div>
+      <div class="note rise rise-3">desta vez, o jogo muda em outro nível</div>
+      <!-- frame:7 duration:4200 transition:fade -->
+    </section>
+
+    <!-- 08 · A DIFERENÇA -->
+    <section class="frame megatype" data-duration="4200" data-od-id="frame-08-diferenca">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.20); bottom:-300px; left:50%; transform:translateX(-50%);"></div></div>
+      <div class="num">FRAME 08 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A diferença</div>
+        <h1 class="rise rise-2">Não é só o acesso à informação.<br/>É o acesso à <span class="em">capacidade de produzir</span>.</h1>
+      </div>
+      <div class="note rise rise-3">informação → <b>produção</b></div>
+      <!-- frame:8 duration:4200 transition:fade -->
+    </section>
+
+    <!-- 09 · ANTES / AGORA -->
+    <section class="frame" data-duration="4200" data-od-id="frame-09-antes-agora">
+      <div class="num">FRAME 09 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content" style="justify-content:center;">
+        <div class="kicker rise">A mudança de regra</div>
+        <div class="split rise rise-2">
+          <div class="side">
+            <h2>Antes → domínio</h2>
+            <p>Dominar ferramentas.</p>
+            <ul>
+              <li>programar para criar software</li>
+              <li>dominar ferramentas para produzir conteúdo</li>
+              <li>conhecimento técnico para analisar dados</li>
+              <li>equipe especializada para automatizar processos</li>
+            </ul>
+          </div>
+          <div class="side now">
+            <h2>Agora → intenção</h2>
+            <p>Descrever o que deve acontecer.</p>
+            <ul>
+              <li>não: “eu sei fazer?”</li>
+              <li>sim: “eu sei o que quero construir?”</li>
+            </ul>
+            <div class="big">basta descrever o resultado.</div>
+          </div>
+        </div>
+      </div>
+      <div class="note">a barreira deixou de ser técnica — virou <b>intenção</b></div>
+      <!-- frame:9 duration:4200 transition:fade -->
+    </section>
+
+    <!-- 10 · A BARREIRA -->
+    <section class="frame megatype" data-duration="3600" data-od-id="frame-10-barreira">
+      <div class="scene"><div class="glow" style="background:oklch(0.5 0 0 / 0.45); top:-260px; left:-260px;"></div></div>
+      <div class="num">FRAME 10 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A barreira muda</div>
+        <h1 class="rise rise-2"><span class="strike">“Eu sei fazer?”</span><br/>para <span class="em">“Eu sei o que quero construir?”</span></h1>
+      </div>
+      <div class="note rise rise-3">a pergunta que separa quem usa de quem constrói</div>
+      <!-- frame:10 duration:3600 transition:fade -->
+    </section>
+
+    <!-- 11 · A JANELA -->
+    <section class="frame" data-duration="4200" data-od-id="frame-11-janela">
+      <div class="scene"><div class="win rise rise-3"></div></div>
+      <div class="num">FRAME 11 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A janela</div>
+        <h1 class="rise rise-2">Toda ruptura abre uma <span class="em">janela</span>.</h1>
+        <div style="font-family:var(--font-mono); font-size:18px; margin-top:38px; letter-spacing:0.08em; color:var(--muted);" class="rise rise-3">as regras antigas ainda funcionam — as novas já começaram</div>
+      </div>
+      <div class="note rise rise-4">internet → smartphone → <b>IA + agentes</b></div>
+      <!-- frame:11 duration:4200 transition:fade -->
+    </section>
+
+    <!-- 12 · DUAS VISÕES -->
+    <section class="frame" data-duration="4000" data-od-id="frame-12-duas-visoes">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.18); left:50%; bottom:-280px; transform:translateX(-50%);"></div></div>
+      <div class="num">FRAME 12 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">Duas visões</div>
+        <div class="twoq rise rise-2">
+          <div class="q">“<b>Como posso usar</b> o ChatGPT para trabalhar melhor?”</div>
+          <div class="q next">“O que posso <b class="nextacc">construir</b> com uma equipe de agentes trabalhando 24 horas?”</div>
+        </div>
+      </div>
+      <div class="note rise rise-3">ferramenta → <b>equipe de agentes</b></div>
+      <!-- frame:12 duration:4000 transition:fade -->
+    </section>
+
+    <!-- 13 · A NOVA CORRIDA -->
+    <section class="frame" data-duration="3800" data-od-id="frame-13-corrida">
+      <div class="scene"><div class="glow" style="background:oklch(0.5 0 0 / 0.4); top:-280px; right:-240px;"></div></div>
+      <div class="num">FRAME 13 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A nova corrida</div>
+        <h1 class="small rise rise-2">Pequenas equipes, <span class="em">resultados de dezenas</span>.</h1>
+        <div class="chips rise rise-3">
+          <span class="chip">pesquisa</span><span class="chip">código</span><span class="chip">vendas</span><span class="chip">atendimento</span><span class="chip">dados</span><span class="chip on">campanhas</span><span class="chip">operação</span><span class="chip">relatórios</span><span class="chip">testes</span><span class="chip">automação</span>
+        </div>
+      </div>
+      <div class="note rise rise-4">um empreendedor dirige agentes — não uma hierarquia</div>
+      <!-- frame:13 duration:3800 transition:fade -->
+    </section>
+
+    <!-- 14 · EQUAÇÃO -->
+    <section class="frame megatype" data-duration="3400" data-od-id="frame-14-equacao">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.20); right:-260px; bottom:-280px;"></div></div>
+      <div class="num">FRAME 14 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A equação</div>
+        <h1 class="rise rise-2">O <span class="em">custo de entrada</span> cai.<br/>Quem pode competir <span class="em">aumenta</span>.</h1>
+      </div>
+      <div class="note rise rise-3">menos barreiras → <b>mais jogadores</b></div>
+      <!-- frame:14 duration:3400 transition:fade -->
+    </section>
+
+    <!-- 15 · DUAS ESCOLHAS -->
+    <section class="frame" data-duration="3600" data-od-id="frame-15-escolhas">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.16); left:50%; top:38%; transform:translateX(-50%);"></div></div>
+      <div class="num">FRAME 15 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">Duas escolhas</div>
+        <div class="rows rise rise-2">
+          <div class="row wait"><span class="tag">esperar</span><span class="bar"></span><span class="txt">a transformação acontecer</span></div>
+          <div class="row build"><span class="tag">construir</span><span class="bar"></span><span class="txt">durante ela</span></div>
+        </div>
+      </div>
+      <div class="note rise rise-3">toda revolução cria os dois grupos</div>
+      <!-- frame:15 duration:3600 transition:fade -->
+    </section>
+
+    <!-- 16 · O VERDADEIRO RISCO -->
+    <section class="frame" data-duration="3600" data-od-id="frame-16-risco">
+      <div class="scene"><div class="glow" style="background:oklch(0.5 0 0 / 0.5); top:-260px; left:50%; transform:translateX(-50%);"></div></div>
+      <div class="num">FRAME 16 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">O verdadeiro risco</div>
+        <h1 class="small rise rise-2">Não é a IA mudar o mercado.<br/>É você continuar <span class="em">com as regras antigas</span>.</h1>
+      </div>
+      <div class="note rise rise-3">a janela não espera</div>
+      <!-- frame:16 duration:3600 transition:fade -->
+    </section>
+
+    <!-- 17 · CTA -->
+    <section class="frame megatype" data-duration="4200" data-od-id="frame-17-cta">
+      <div class="scene"><div class="glow" style="background:oklch(0.87 0.15 202 / 0.30); left:50%; top:50%; transform:translate(-50%,-50%);"></div><div class="door"></div></div>
+      <div class="num">FRAME 17 / 17</div>
+      <div class="brand">HYPERFRAMES · JANELA DE OPORTUNIDADE</div>
+      <div class="content">
+        <div class="kicker rise">A janela</div>
+        <h1 class="rise rise-2">A janela está aberta.<br/><span class="em">Quem atravessa primeiro?</span></h1>
+        <a class="cta rise rise-3" href="#" data-od-id="cta-vamos-comecar">Vamos começar →</a>
+      </div>
+      <div class="note rise rise-4">o custo de construir nunca esteve tão baixo</div>
+      <!-- frame:17 duration:4200 transition:fade -->
+    </section>
+
+  </div>
+</div>
+
+<!-- HYPERFRAMES_META: {"frames":[
+  {"i":1,"duration":4200,"transition":"fade","scene":"Hook: Estamos em uma janela de oportunidade"},
+  {"i":2,"duration":3200,"transition":"fade","scene":"Algumas tecnologias mudam quem pode jogar"},
+  {"i":3,"duration":3400,"transition":"fade","scene":"Ruptura 01: a internet, as distâncias desaparecem"},
+  {"i":4,"duration":3000,"transition":"fade","scene":"Nasceram Google e Amazon"},
+  {"i":5,"duration":3400,"transition":"fade","scene":"Ruptura 02: o smartphone, computador no bolso"},
+  {"i":6,"duration":3000,"transition":"fade","scene":"Nasceram Facebook, Uber, Instagram, Airbnb"},
+  {"i":7,"duration":4200,"transition":"fade","scene":"Ruptura 03: a IA e a diferença fundamental"},
+  {"i":8,"duration":4200,"transition":"fade","scene":"Acesso à capacidade de produzir"},
+  {"i":9,"duration":4200,"transition":"fade","scene":"Antes: dominar ferramentas / Agora: descrever o resultado"},
+  {"i":10,"duration":3600,"transition":"fade","scene":"De eu sei fazer para eu sei o que quero construir"},
+  {"i":11,"duration":4200,"transition":"fade","scene":"Toda ruptura abre uma janela"},
+  {"i":12,"duration":4000,"transition":"fade","scene":"Ferramenta vs equipe de agentes 24h"},
+  {"i":13,"duration":3800,"transition":"fade","scene":"A nova corrida: pequenas equipes e agentes"},
+  {"i":14,"duration":3400,"transition":"fade","scene":"Custo de entrada cai, competidores aumentam"},
+  {"i":15,"duration":3600,"transition":"fade","scene":"Esperar vs construir durante a transformação"},
+  {"i":16,"duration":3600,"transition":"fade","scene":"O risco: continuar com as regras antigas"},
+  {"i":17,"duration":4200,"transition":"fade","scene":"CTA: a janela está aberta, quem atravessa primeiro"}
+]} -->
+
+<div class="controls" data-od-id="playback-controls">
+  <button id="prev" title="Voltar">‹</button>
+  <button id="play" title="Play / Pause">⏸</button>
+  <button id="next" title="Avançar">›</button>
+  <span id="counter" style="opacity:0.6">01 / 17</span>
+</div>
+
+<script>
+(function () {
+  const STORE = 'hf.janela.oportunidade';
+  const frames = Array.from(document.querySelectorAll('.frame'));
+  const total = frames.length;
+  const counter = document.getElementById('counter');
+  const playBtn = document.getElementById('play');
+  const progress = document.getElementById('progress');
+  const comp = document.getElementById('comp');
+
+  let i = 0;
+  let playing = true;
+  let frameStart = Date.now();
+  let timer;
+
+  function persist() {
+    try { localStorage.setItem(STORE, JSON.stringify({ i: i, playing: playing })); } catch (e) {}
+  }
+  function schedule() {
+    clearTimeout(timer);
+    const d = Number(frames[i].dataset.duration) || 3000;
+    timer = setTimeout(function () { show(i + 1); }, d);
+  }
+  function show(n) {
+    i = (n + total) % total;
+    frames.forEach(function (f, k) { f.classList.toggle('active', k === i); });
+    counter.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    frameStart = Date.now();
+    persist();
+    if (playing) schedule();
+  }
+  function tick() {
+    const d = Number(frames[i].dataset.duration) || 3000;
+    const pct = Math.min(1, (Date.now() - frameStart) / d) * 100;
+    progress.style.width = pct + '%';
+    requestAnimationFrame(tick);
+  }
+  function fit() {
+    const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    const x = (window.innerWidth - 1920 * s) / 2;
+    const y = (window.innerHeight - 1080 * s) / 2;
+    comp.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + s + ')';
+  }
+
+  document.getElementById('prev').addEventListener('click', function () { show(i - 1); });
+  document.getElementById('next').addEventListener('click', function () { show(i + 1); });
+  playBtn.addEventListener('click', function () {
+    playing = !playing;
+    playBtn.textContent = playing ? '⏸' : '▶';
+    if (playing) { frameStart = Date.now(); schedule(); } else { clearTimeout(timer); }
+    persist();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') show(i + 1);
+    else if (e.key === 'ArrowLeft') show(i - 1);
+    else if (e.key === ' ') { e.preventDefault(); playBtn.click(); }
+  });
+  frames.forEach(function (f) {
+    f.addEventListener('click', function (e) {
+      if (e.target.closest('a.cta')) { e.preventDefault(); /* destino final */ return; }
+      show(i + 1);
+    });
+  });
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (saved && saved.i >= 0 && saved.i < total) {
+      i = saved.i;
+      playing = saved.playing !== false;
+      frames.forEach(function (f, k) { f.classList.toggle('active', k === i); });
+      counter.textContent = String(i + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+    }
+  } catch (e) {}
+
+  playBtn.textContent = playing ? '⏸' : '▶';
+  frameStart = Date.now();
+  if (playing) schedule();
+  window.addEventListener('resize', fit);
+  fit();
+  tick();
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,13 @@
 [
   {
+    "tag": "Manifesto",
+    "title": "Manifesto Selfware: estamos em uma janela de oportunidade",
+    "subtitle": "A IA está democratizando o acesso à capacidade de produzir. A janela está aberta — a questão é quem vai atravessá-la primeiro.",
+    "href": "post/manifesto-selfware.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre a janela de oportunidade aberta pela IA"
+  },
+  {
     "tag": "Growth & Vendas B2B",
     "title": "AIO e GEO: estratégias de marketing digital para a era da IA",
     "subtitle": "Como preparar seu conteúdo para ser compreendido e recomendado por inteligências artificiais.",
