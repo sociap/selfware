@@ -1,5 +1,13 @@
 [
   {
+    "tag": "Futuros da IA",
+    "title": "Os 12 futuros da inteligência artificial",
+    "subtitle": "Nenhum futuro é inevitável: o mapa completo dos cenários da IA, baseado em Life 3.0 de Max Tegmark.",
+    "href": "post/os-12-futuros-da-ia.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre os 12 futuros possíveis da inteligência artificial"
+  },
+  {
     "tag": "Manifesto",
     "title": "Manifesto Selfware: estamos em uma janela de oportunidade",
     "subtitle": "A IA está democratizando o acesso à capacidade de produzir. A janela está aberta — a questão é quem vai atravessá-la primeiro.",
