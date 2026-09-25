@@ -1,0 +1,3426 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07110f">
+  <meta name="description" content="Apresentação interativa sobre A Estratégia do Motor 2, de Sandro Magaldi e José Salibi Neto: dois motores de crescimento, um só negócio.">
+  <title>A Estratégia do Motor 2</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --base: #07110f;
+      --ink: #f2f0e8;
+      --muted: #a7aea7;
+      --dim: #6d756f;
+      --line: rgba(242, 240, 232, .14);
+      --line-2: rgba(242, 240, 232, .26);
+      --panel: rgba(255, 255, 255, .055);
+      --panel-2: rgba(255, 255, 255, .09);
+      --accent: #c8ff4d;
+      --accent-rgb: 200, 255, 77;
+      --ember: #ff8c61;
+      --ember-rgb: 255, 140, 97;
+      --cyan: #66e4ff;
+      --cyan-rgb: 102, 228, 255;
+      --violet: #aa91ff;
+      --violet-rgb: 170, 145, 255;
+      --danger: #ff5d59;
+      --danger-rgb: 255, 93, 89;
+      --green: #5fe3a6;
+      --green-rgb: 95, 227, 166;
+      --m1: #ff9d5c;
+      --m1-rgb: 255, 157, 92;
+      --m2: #5fdcff;
+      --m2-rgb: 95, 220, 255;
+      --current-accent: var(--accent);
+      --current-accent-rgb: var(--accent-rgb);
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      --header-h: 72px;
+      --footer-h: 82px;
+      --notes-h: 0px;
+      --fs: clamp(13px, .5vw + .6vh, 17px);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-width: 320px;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--base);
+    }
+
+    body {
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    ul {
+      margin-top: 0;
+    }
+
+    button {
+      color: inherit;
+      font: inherit;
+    }
+
+    button:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 2px solid var(--current-accent);
+      outline-offset: 3px;
+    }
+
+    ::selection {
+      color: #07110f;
+      background: var(--current-accent);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .notes {
+      display: none;
+    }
+
+    /* ============ AMBIENT ============ */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      pointer-events: none;
+      opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+    }
+
+    .ambient {
+      position: fixed;
+      inset: -20%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 74% 24%, rgba(var(--current-accent-rgb), .12), transparent 31%),
+        radial-gradient(circle at 17% 77%, rgba(34, 105, 91, .16), transparent 35%),
+        linear-gradient(145deg, #07110f 0%, #0a1613 56%, #050a09 100%);
+      transition: background 900ms var(--ease);
+    }
+
+    .ambient::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .2;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .025) 1px, transparent 1px);
+      background-size: 72px 72px;
+      mask-image: linear-gradient(to bottom, transparent, black 25%, black 80%, transparent);
+    }
+
+    /* ============ TOPBAR ============ */
+    .topbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: var(--header-h);
+      padding: 0 clamp(20px, 3.5vw, 56px);
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      background: linear-gradient(to bottom, rgba(5, 11, 10, .75), rgba(5, 11, 10, .18));
+      backdrop-filter: blur(12px);
+    }
+
+    .brand-button,
+    .tool-button,
+    .nav-button,
+    .close-button,
+    .dot-button,
+    .map-card {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .brand-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      margin-left: -8px;
+      color: var(--ink);
+      background: transparent;
+    }
+
+    .brand-mark {
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(var(--current-accent-rgb), .5);
+      border-radius: 50%;
+      color: var(--current-accent);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+      box-shadow: inset 0 0 18px rgba(var(--current-accent-rgb), .08);
+      transition: 450ms var(--ease);
+    }
+
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--current-accent);
+      box-shadow: 0 0 12px var(--current-accent);
+      transform: translate(14px, -7px);
+    }
+
+    .brand-label {
+      font-size: 12px;
+      font-weight: 650;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .topbar-center {
+      position: absolute;
+      left: 50%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateX(-50%);
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .topbar-center::before {
+      content: "";
+      width: 26px;
+      height: 1px;
+      background: var(--current-accent);
+      box-shadow: 0 0 10px rgba(var(--current-accent-rgb), .7);
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 38px;
+      height: 38px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .025);
+      transition: border-color 220ms ease, color 220ms ease, background 220ms ease, transform 220ms ease;
+    }
+
+    .tool-button:hover,
+    .tool-button[aria-pressed="true"] {
+      color: var(--ink);
+      border-color: rgba(var(--current-accent-rgb), .45);
+      background: rgba(var(--current-accent-rgb), .08);
+      transform: translateY(-1px);
+    }
+
+    .tool-button[aria-pressed="true"] {
+      color: var(--current-accent);
+    }
+
+    .tool-button svg,
+    .nav-button svg {
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.7;
+    }
+
+    .tool-button span {
+      display: none;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .progress-track {
+      position: fixed;
+      inset: var(--header-h) 0 auto 0;
+      z-index: 31;
+      height: 2px;
+      background: rgba(255, 255, 255, .045);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 100%;
+      background: var(--current-accent);
+      box-shadow: 0 0 14px rgba(var(--current-accent-rgb), .7);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 550ms var(--ease), background 500ms ease;
+    }
+
+    /* ============ SLIDES ============ */
+    .deck {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100dvh;
+    }
+
+    .slide {
+      --c: var(--slide-accent);
+      --cr: var(--slide-accent-rgb);
+      --slide-accent: var(--accent);
+      --slide-accent-rgb: var(--accent-rgb);
+      position: absolute;
+      inset: 0;
+      display: grid;
+      padding: calc(var(--header-h) + clamp(18px, 3vh, 44px)) clamp(24px, 5vw, 92px) calc(var(--footer-h) + var(--notes-h) + clamp(14px, 2.4vh, 34px));
+      overflow: hidden;
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate3d(38px, 0, 0);
+      transition: opacity 430ms ease, transform 650ms var(--ease), visibility 0s linear 650ms;
+    }
+
+    .slide[data-tone="ember"] {
+      --slide-accent: var(--ember);
+      --slide-accent-rgb: var(--ember-rgb);
+    }
+
+    .slide[data-tone="cyan"] {
+      --slide-accent: var(--cyan);
+      --slide-accent-rgb: var(--cyan-rgb);
+    }
+
+    .slide[data-tone="violet"] {
+      --slide-accent: var(--violet);
+      --slide-accent-rgb: var(--violet-rgb);
+    }
+
+    .slide[data-tone="danger"] {
+      --slide-accent: var(--danger);
+      --slide-accent-rgb: var(--danger-rgb);
+    }
+
+    .slide[data-tone="green"] {
+      --slide-accent: var(--green);
+      --slide-accent-rgb: var(--green-rgb);
+    }
+
+    .slide.is-active {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 0s;
+    }
+
+    .slide.is-active {
+      --current-accent: var(--slide-accent);
+      --current-accent-rgb: var(--slide-accent-rgb);
+    }
+
+    .slide-inner {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      width: min(100%, 1440px);
+      min-width: 0;
+      margin: auto;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 520ms var(--ease), transform 650ms var(--ease);
+    }
+
+    .is-active .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .is-active .reveal:nth-child(1) { transition-delay: 70ms; }
+    .is-active .reveal:nth-child(2) { transition-delay: 130ms; }
+    .is-active .reveal:nth-child(3) { transition-delay: 190ms; }
+    .is-active .reveal:nth-child(4) { transition-delay: 250ms; }
+    .is-active .reveal:nth-child(5) { transition-delay: 310ms; }
+    .is-active .reveal:nth-child(6) { transition-delay: 370ms; }
+
+    /* ============ TIPOGRAFIA ============ */
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      align-self: flex-start;
+      margin: 0 0 calc(var(--fs) * .8);
+      color: var(--slide-accent);
+      font-size: calc(var(--fs) * .74);
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 32px;
+      height: 2px;
+      background: currentColor;
+      box-shadow: 0 0 14px currentColor;
+    }
+
+    .section-title {
+      max-width: 1150px;
+      margin: 0 0 calc(var(--fs) * .55);
+      font-size: calc(var(--fs) * 2.5);
+      font-weight: 700;
+      line-height: .99;
+      letter-spacing: -.042em;
+      text-wrap: balance;
+    }
+
+    .section-title em,
+    .display-title em {
+      color: var(--slide-accent);
+      font-family: Georgia, "Times New Roman", serif;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: -.02em;
+    }
+
+    .lead {
+      max-width: 820px;
+      margin: 0;
+      color: #c7ccc6;
+      font-size: calc(var(--fs) * 1.2);
+      line-height: 1.48;
+    }
+
+    .lead b {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .s-body {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 1.7vh, 22px);
+      min-width: 0;
+      margin-top: clamp(14px, 2.2vh, 30px);
+    }
+
+    .slide.dense .section-title {
+      font-size: calc(var(--fs) * 2);
+    }
+
+    .slide.dense .s-body {
+      gap: clamp(10px, 1.4vh, 18px);
+    }
+
+    .slide.dense .card p,
+    .slide.dense .cmp .r>div {
+      font-size: calc(var(--fs) * .8);
+    }
+
+    .slide.dense .callout {
+      padding: calc(var(--fs) * .6) calc(var(--fs) * 1);
+    }
+
+    .slide.dense .card {
+      padding: calc(var(--fs) * .85) calc(var(--fs) * 1.05);
+    }
+
+    /* ============ GRIDS ============ */
+    .grid {
+      display: grid;
+      gap: clamp(10px, 1.2vw, 18px);
+      min-width: 0;
+    }
+
+    .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .g5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .g-21 { grid-template-columns: minmax(0, 1.12fr) minmax(0, .88fr); }
+    .g-12 { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); }
+    .g-11 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(10px, 1.2vw, 16px);
+      min-width: 0;
+    }
+
+    .row {
+      display: flex;
+      gap: clamp(10px, 1.2vw, 16px);
+      align-items: stretch;
+    }
+
+    /* ============ CARD ============ */
+    .card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--fs) * .4);
+      min-width: 0;
+      padding: calc(var(--fs) * .95) calc(var(--fs) * 1.1);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .018));
+      backdrop-filter: blur(12px);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: calc(var(--fs) * 1.05);
+      font-weight: 680;
+      line-height: 1.2;
+      letter-spacing: -.015em;
+    }
+
+    .card h4 {
+      margin: 0;
+      font-size: calc(var(--fs) * .95);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .92);
+      line-height: 1.5;
+    }
+
+    .card b {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .card .ico {
+      display: grid;
+      place-items: center;
+      width: 2.35em;
+      height: 2.35em;
+      margin-bottom: calc(var(--fs) * .18);
+      border: 1px solid rgba(var(--cr), .28);
+      border-radius: 12px;
+      color: var(--c);
+      background: rgba(var(--cr), .1);
+      font-size: calc(var(--fs) * 1.05);
+      line-height: 1;
+    }
+
+    .card .tag {
+      position: absolute;
+      top: calc(var(--fs) * .7);
+      right: calc(var(--fs) * .7);
+      padding: .3em .6em;
+      border: 1px solid rgba(var(--cr), .26);
+      border-radius: 999px;
+      color: var(--c);
+      background: rgba(var(--cr), .09);
+      font-size: calc(var(--fs) * .6);
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .card:has(> .tag) h3 {
+      padding-right: 5.4em;
+    }
+
+    .card.hi { --c: var(--cyan); --cr: var(--cyan-rgb); }
+    .card.warm,
+    .card.warn { --c: var(--m1); --cr: var(--m1-rgb); }
+    .card.vio { --c: var(--violet); --cr: var(--violet-rgb); }
+    .card.gr { --c: var(--green); --cr: var(--green-rgb); }
+    .card.red { --c: var(--danger); --cr: var(--danger-rgb); }
+
+    .card.hi,
+    .card.warm,
+    .card.warn,
+    .card.vio,
+    .card.gr,
+    .card.red {
+      border-color: rgba(var(--cr), .28);
+      background: linear-gradient(145deg, rgba(var(--cr), .12), rgba(var(--cr), .022));
+    }
+
+    .card.hi h3,
+    .card.warm h3,
+    .card.warn h3,
+    .card.vio h3,
+    .card.gr h3,
+    .card.red h3,
+    .card.hi h4,
+    .card.warm h4,
+    .card.gr h4,
+    .card.red h4 {
+      color: var(--c);
+    }
+
+    /* ============ LISTAS ============ */
+    ul.list {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--fs) * .46);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    ul.list li {
+      position: relative;
+      padding-left: 1.7em;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .95);
+      line-height: 1.45;
+    }
+
+    ul.list li b {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    ul.list li::before {
+      content: "";
+      position: absolute;
+      left: .25em;
+      top: .46em;
+      width: .44em;
+      height: .44em;
+      border-radius: 3px;
+      background: var(--c);
+      box-shadow: 0 0 0 3px rgba(var(--cr), .16);
+    }
+
+    ul.list.check li::before {
+      content: "✓";
+      top: -.1em;
+      left: .1em;
+      width: auto;
+      height: auto;
+      color: var(--green);
+      background: none;
+      box-shadow: none;
+      font-size: 1.05em;
+      font-weight: 900;
+    }
+
+    ul.list.cross li::before {
+      content: "✕";
+      top: -.05em;
+      left: .1em;
+      width: auto;
+      height: auto;
+      color: var(--danger);
+      background: none;
+      box-shadow: none;
+      font-size: 1em;
+      font-weight: 900;
+    }
+
+    ul.list.num {
+      counter-reset: n;
+    }
+
+    ul.list.num li {
+      padding-left: 2.2em;
+      counter-increment: n;
+    }
+
+    ul.list.num li::before {
+      content: counter(n);
+      top: -.05em;
+      left: 0;
+      display: grid;
+      place-items: center;
+      width: 1.6em;
+      height: 1.6em;
+      color: #07110f;
+      background: var(--c);
+      box-shadow: 0 0 14px rgba(var(--cr), .45);
+      font-size: .68em;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    /* ============ STATS ============ */
+    .stat {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: .2em;
+      min-width: 0;
+      padding: calc(var(--fs) * .85) calc(var(--fs) * 1);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02));
+    }
+
+    .stat .n {
+      display: block;
+      color: var(--c);
+      font-size: calc(var(--fs) * 2.1);
+      font-weight: 720;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .stat .l {
+      display: block;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .8);
+      line-height: 1.4;
+    }
+
+    .stat.m1 { --c: var(--m1); --cr: var(--m1-rgb); }
+    .stat.m2 { --c: var(--m2); --cr: var(--m2-rgb); }
+    .stat.vio { --c: var(--violet); --cr: var(--violet-rgb); }
+    .stat.red { --c: var(--danger); --cr: var(--danger-rgb); }
+    .stat.gr { --c: var(--green); --cr: var(--green-rgb); }
+
+    .stat.m1, .stat.m2, .stat.vio, .stat.red, .stat.gr {
+      border-color: rgba(var(--cr), .26);
+      background: linear-gradient(145deg, rgba(var(--cr), .12), rgba(var(--cr), .02));
+    }
+
+    /* ============ TABELA COMPARATIVA ============ */
+    .cmp {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .02);
+    }
+
+    .cmp>div {
+      display: grid;
+      grid-template-columns: .84fr 1.08fr 1.08fr;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .cmp>div:last-child {
+      border-bottom: 0;
+    }
+
+    .cmp .h {
+      background: rgba(255, 255, 255, .05);
+      font-size: calc(var(--fs) * .72);
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .cmp .h>div,
+    .cmp .r>div {
+      padding: calc(var(--fs) * .5) calc(var(--fs) * .85);
+      font-size: calc(var(--fs) * .87);
+      line-height: 1.35;
+    }
+
+    .cmp .lbl {
+      color: var(--dim);
+      font-size: calc(var(--fs) * .82);
+      font-weight: 640;
+    }
+
+    .cmp .a {
+      color: #ffcfab;
+      background: rgba(var(--m1-rgb), .06);
+    }
+
+    .cmp .b {
+      color: #b6ecfb;
+      background: rgba(var(--m2-rgb), .06);
+    }
+
+    .cmp .h .a { color: var(--m1); }
+    .cmp .h .b { color: var(--m2); }
+    .cmp .r b { color: inherit; font-weight: 700; }
+
+    /* ============ PASSOS ============ */
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: clamp(9px, 1vw, 15px);
+      min-width: 0;
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--fs) * .3);
+      min-width: 0;
+      padding: calc(var(--fs) * .78) calc(var(--fs) * .9);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .015));
+    }
+
+    .step .n {
+      display: flex;
+      align-items: center;
+      gap: .5em;
+      color: var(--c);
+      font-size: calc(var(--fs) * .7);
+      font-weight: 800;
+      letter-spacing: .1em;
+    }
+
+    .step .n::before {
+      content: attr(data-n);
+      display: grid;
+      place-items: center;
+      width: 1.6em;
+      height: 1.6em;
+      border: 1px solid rgba(var(--cr), .3);
+      border-radius: 8px;
+      color: var(--c);
+      background: rgba(var(--cr), .14);
+      font-size: .95em;
+      letter-spacing: 0;
+    }
+
+    .step h4 {
+      margin: 0;
+      font-size: calc(var(--fs) * .95);
+      font-weight: 680;
+      line-height: 1.22;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .8);
+      line-height: 1.42;
+    }
+
+    /* ============ CALLOUT / QUOTE ============ */
+    .callout {
+      position: relative;
+      padding: calc(var(--fs) * .9) calc(var(--fs) * 1.2);
+      border: 1px solid rgba(var(--cr), .26);
+      border-radius: 16px;
+      background: linear-gradient(140deg, rgba(var(--cr), .11), rgba(var(--cr), .02));
+    }
+
+    .callout::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 16%;
+      bottom: 16%;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--c);
+      box-shadow: 0 0 14px rgba(var(--cr), .6);
+    }
+
+    .callout p {
+      margin: 0;
+      color: #dfe4dc;
+      font-size: calc(var(--fs) * 1.02);
+      line-height: 1.45;
+    }
+
+    .callout p b {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .callout.warn { --c: var(--ember); --cr: var(--ember-rgb); }
+    .callout.good { --c: var(--green); --cr: var(--green-rgb); }
+    .callout.bad { --c: var(--danger); --cr: var(--danger-rgb); }
+
+    .quote {
+      position: relative;
+      max-width: 20ch;
+      margin: 0;
+      padding-left: .55em;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: calc(var(--fs) * 2);
+      font-style: italic;
+      line-height: 1.2;
+      letter-spacing: -.02em;
+      text-wrap: balance;
+    }
+
+    .quote::before {
+      content: "\201C";
+      position: absolute;
+      top: -.24em;
+      left: -.04em;
+      color: rgba(var(--cr), .3);
+      font-size: 5em;
+      line-height: 1;
+    }
+
+    .quote span {
+      display: block;
+      margin-top: calc(var(--fs) * .9);
+      color: var(--muted);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      font-size: calc(var(--fs) * .74);
+      font-style: normal;
+      font-weight: 700;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    /* ============ PILLS / TAGS ============ */
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .5em;
+      padding: .4em .85em;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .03);
+      font-size: calc(var(--fs) * .76);
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+
+    .pill.m1 { color: var(--m1); border-color: rgba(var(--m1-rgb), .4); background: rgba(var(--m1-rgb), .1); }
+    .pill.m2 { color: var(--m2); border-color: rgba(var(--m2-rgb), .4); background: rgba(var(--m2-rgb), .1); }
+    .pill.vio { color: #c3b2ff; border-color: rgba(var(--violet-rgb), .4); background: rgba(var(--violet-rgb), .12); }
+    .pill.gr { color: var(--green); border-color: rgba(var(--green-rgb), .4); background: rgba(var(--green-rgb), .1); }
+
+    .pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: calc(var(--fs) * .42);
+    }
+
+    /* ============ BARRAS ============ */
+    .bar {
+      height: 6px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .07);
+    }
+
+    .bar>span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: var(--c);
+      box-shadow: 0 0 12px rgba(var(--cr), .45);
+    }
+
+    .meter {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--fs) * .32);
+    }
+
+    .meter .top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1em;
+    }
+
+    .meter .top b {
+      font-size: calc(var(--fs) * .92);
+      font-weight: 650;
+    }
+
+    .meter .top em {
+      color: var(--dim);
+      font-size: calc(var(--fs) * .76);
+      font-style: normal;
+    }
+
+    .scale {
+      display: flex;
+      align-items: center;
+      gap: calc(var(--fs) * .6);
+      width: 100%;
+    }
+
+    .scale .bar {
+      flex: 1;
+    }
+
+    .scale .l1,
+    .scale .l2 {
+      color: var(--dim);
+      font-size: calc(var(--fs) * .74);
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .micro {
+      margin: 0;
+      color: var(--dim);
+      font-size: calc(var(--fs) * .74);
+      line-height: 1.5;
+    }
+
+    /* ============ MATRIZ DE ADJACÊNCIAS ============ */
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(10px, 1.1vw, 16px);
+      min-width: 0;
+    }
+
+    .mq {
+      position: relative;
+      padding: calc(var(--fs) * .9) calc(var(--fs) * 1.05);
+      border: 1px solid rgba(var(--cr), .26);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(var(--cr), .1), rgba(var(--cr), .02));
+    }
+
+    .mq .t {
+      margin-bottom: .25em;
+      color: var(--c);
+      font-size: calc(var(--fs) * 1.02);
+      font-weight: 700;
+      letter-spacing: -.01em;
+    }
+
+    .mq .d {
+      margin: 0;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .85);
+      line-height: 1.45;
+    }
+
+    .mq.l1 { --c: var(--green); --cr: var(--green-rgb); }
+    .mq.l2 { --c: var(--cyan); --cr: var(--cyan-rgb); }
+    .mq.l3 { --c: var(--m1); --cr: var(--m1-rgb); }
+    .mq.l4 { --c: var(--danger); --cr: var(--danger-rgb); }
+
+    /* ============ DOIS MOTORES ============ */
+    .engines {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(56px, 6vw, 92px) minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .engine {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--fs) * .5);
+      padding: calc(var(--fs) * 1) calc(var(--fs) * 1.15);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(150deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02));
+    }
+
+    .engine .t {
+      font-size: calc(var(--fs) * 1.5);
+      font-weight: 720;
+      letter-spacing: -.02em;
+    }
+
+    .engine .d {
+      margin: 0;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .92);
+      line-height: 1.5;
+    }
+
+    .engine .d b {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .engine .mini {
+      margin: auto 0 0;
+      padding-top: calc(var(--fs) * .55);
+      border-top: 1px dashed rgba(var(--cr), .34);
+      color: var(--dim);
+      font-size: calc(var(--fs) * .72);
+      letter-spacing: .04em;
+    }
+
+    .engine.e1 {
+      --c: var(--m1);
+      --cr: var(--m1-rgb);
+    }
+
+    .engine.e2 {
+      --c: var(--m2);
+      --cr: var(--m2-rgb);
+    }
+
+    .engine.e1 .t { color: var(--m1); }
+    .engine.e2 .t { color: var(--m2); }
+
+    .gearbox {
+      display: grid;
+      place-items: center;
+      gap: 6px;
+      text-align: center;
+    }
+
+    .gearbox .ring {
+      display: grid;
+      place-items: center;
+      width: clamp(38px, 4.4vw, 60px);
+      height: clamp(38px, 4.4vw, 60px);
+      border: 1px dashed rgba(var(--cr), .5);
+      border-radius: 50%;
+      color: var(--slide-accent);
+      font-size: calc(var(--fs) * 1.4);
+      animation: spin 26s linear infinite;
+    }
+
+    .gearbox small {
+      color: var(--dim);
+      font-size: calc(var(--fs) * .62);
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    /* ============ TIMELINE ============ */
+    .tl {
+      display: flex;
+      flex-direction: column;
+      gap: calc(var(--fs) * .7);
+    }
+
+    .tl .it {
+      display: grid;
+      grid-template-columns: 5.2em minmax(0, 1fr);
+      gap: calc(var(--fs) * .7);
+      align-items: start;
+    }
+
+    .tl .yr {
+      padding-top: .1em;
+      color: var(--dim);
+      font-size: calc(var(--fs) * .72);
+      font-weight: 800;
+      letter-spacing: .06em;
+    }
+
+    .tl .dot {
+      position: relative;
+      padding-left: calc(var(--fs) * 1.05);
+    }
+
+    .tl .dot::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .42em;
+      width: .5em;
+      height: .5em;
+      border-radius: 50%;
+      background: var(--c);
+      box-shadow: 0 0 0 3px rgba(var(--cr), .16);
+    }
+
+    .tl .dot::after {
+      content: "";
+      position: absolute;
+      left: .22em;
+      top: 1.1em;
+      bottom: -.9em;
+      width: 1px;
+      background: var(--line-2);
+    }
+
+    .tl .it:last-child .dot::after {
+      display: none;
+    }
+
+    .tl .dot b {
+      display: block;
+      margin-bottom: .1em;
+      font-size: calc(var(--fs) * .95);
+      font-weight: 680;
+    }
+
+    .tl .dot p {
+      margin: 0;
+      color: var(--muted);
+      font-size: calc(var(--fs) * .85);
+      line-height: 1.45;
+    }
+
+    /* ============ CAPA ============ */
+    .cover {
+      align-items: end;
+    }
+
+    .cover .slide-inner {
+      margin: auto 0 0;
+      padding-bottom: clamp(12px, 2.2vh, 32px);
+    }
+
+    .display-title {
+      max-width: 16ch;
+      margin-bottom: calc(var(--fs) * .8);
+      font-size: calc(var(--fs) * 4.3);
+      font-weight: 720;
+      line-height: .88;
+      letter-spacing: -.07em;
+    }
+
+    .display-subtitle {
+      max-width: 620px;
+      margin: 0;
+      color: #c8cdc7;
+      font-size: calc(var(--fs) * 1.25);
+      line-height: 1.45;
+    }
+
+    .cover-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: calc(var(--fs) * .9);
+      margin-top: calc(var(--fs) * 1.1);
+      color: var(--muted);
+      font-size: calc(var(--fs) * .78);
+    }
+
+    .cover-meta b {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    .cover-meta .dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--slide-accent);
+      box-shadow: 0 0 10px var(--slide-accent);
+    }
+
+    .cover-thesis {
+      max-width: 760px;
+      margin-top: calc(var(--fs) * 1.1);
+    }
+
+    .orbit {
+      position: absolute;
+      top: 46%;
+      right: clamp(-320px, -9vw, -70px);
+      z-index: 1;
+      width: min(62vw, 820px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 50%;
+      transform: translateY(-50%);
+      animation: orbit-drift 13s ease-in-out infinite alternate;
+    }
+
+    .orbit::before,
+    .orbit::after {
+      content: "";
+      position: absolute;
+      inset: 13%;
+      border: 1px solid rgba(200, 255, 77, .11);
+      border-radius: 50%;
+    }
+
+    .orbit::after {
+      inset: 30%;
+      background: radial-gradient(circle at 35% 30%, rgba(200, 255, 77, .25), rgba(200, 255, 77, .03) 45%, transparent 70%);
+      box-shadow: 0 0 120px rgba(200, 255, 77, .08);
+    }
+
+    .orbit-core {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 13px;
+      height: 13px;
+      border: 2px solid var(--base);
+      border-radius: 50%;
+      background: var(--slide-accent);
+      box-shadow: 0 0 28px rgba(200, 255, 77, .75);
+      transform: translate(-50%, -50%);
+    }
+
+    .orbit-node {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin: -17px;
+      border: 1px solid rgba(255, 255, 255, .15);
+      border-radius: 50%;
+      color: #b8c0b9;
+      background: rgba(7, 17, 15, .82);
+      font-size: 9px;
+      font-weight: 750;
+      transform: rotate(var(--angle)) translateX(min(30vw, 400px)) rotate(calc(var(--angle) * -1));
+      animation: counter-orbit 20s linear infinite;
+      animation-delay: var(--delay);
+    }
+
+    .cover-index {
+      position: absolute;
+      top: 50%;
+      right: clamp(20px, 4vw, 62px);
+      z-index: 2;
+      color: rgba(255, 255, 255, .05);
+      font-size: clamp(9rem, 24vw, 26rem);
+      font-weight: 800;
+      line-height: .7;
+      letter-spacing: -.1em;
+      transform: translateY(-50%);
+      user-select: none;
+    }
+
+    /* ============ FOOTER NAV ============ */
+    .footer-nav {
+      position: fixed;
+      inset: auto 0 var(--notes-h) 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      height: var(--footer-h);
+      padding: 0 clamp(20px, 3.5vw, 56px);
+      border-top: 1px solid rgba(255, 255, 255, .07);
+      background: linear-gradient(to top, rgba(5, 11, 10, .9), rgba(5, 11, 10, .25));
+      backdrop-filter: blur(12px);
+      transition: bottom 380ms var(--ease);
+    }
+
+    .footer-nav .nav-button:first-child {
+      justify-self: start;
+    }
+
+    .footer-nav .nav-button:last-child {
+      justify-self: end;
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 40px;
+      padding: 0 13px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 11px;
+      font-weight: 700;
+      transition: color 220ms ease, background 220ms ease, transform 220ms ease;
+    }
+
+    .nav-button:hover:not(:disabled) {
+      color: var(--ink);
+      background: rgba(255, 255, 255, .055);
+      transform: translateY(-1px);
+    }
+
+    .nav-button:disabled {
+      opacity: .25;
+      cursor: not-allowed;
+    }
+
+    .slide-counter {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .08em;
+    }
+
+    .slide-counter strong {
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 720;
+    }
+
+    .slide-counter .counter-separator {
+      color: var(--dim);
+    }
+
+    .dot-rail {
+      position: fixed;
+      top: calc(50% - var(--notes-h) / 2);
+      right: clamp(10px, 1.8vw, 28px);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      transform: translateY(-50%);
+      transition: top 380ms var(--ease);
+    }
+
+    .dot-button {
+      width: 5px;
+      height: 5px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .24);
+      transition: height 300ms var(--ease), border-radius 300ms var(--ease), background 300ms ease;
+    }
+
+    .dot-button:hover,
+    .dot-button[aria-current="true"] {
+      height: 24px;
+      border-radius: 5px;
+      background: var(--current-accent);
+      box-shadow: 0 0 12px rgba(var(--current-accent-rgb), .45);
+    }
+
+    /* ============ NOTAS ============ */
+    .notes-panel {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 45;
+      height: min(36vh, 330px);
+      padding: 18px clamp(20px, 3.5vw, 56px) 24px;
+      overflow: auto;
+      border-top: 1px solid var(--line-2);
+      background: rgba(6, 12, 11, .96);
+      backdrop-filter: blur(18px);
+      visibility: hidden;
+      transform: translateY(101%);
+      transition: transform 420ms var(--ease), visibility 0s linear 420ms;
+    }
+
+    body.notes-on {
+      --notes-h: min(36vh, 330px);
+    }
+
+    body.notes-on .notes-panel {
+      visibility: visible;
+      transform: translateY(0);
+      transition-delay: 0s;
+    }
+
+    .notes-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .notes-head h5 {
+      margin: 0;
+      color: var(--current-accent);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .notes-body {
+      color: var(--muted);
+      font-size: calc(var(--fs) * .96);
+      line-height: 1.6;
+    }
+
+    .notes-body h5 {
+      display: none;
+    }
+
+    .notes-body p {
+      margin: 0 0 8px;
+    }
+
+    .notes-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .notes-body strong {
+      color: var(--ink);
+      font-weight: 650;
+    }
+
+    /* ============ MAPA / DIÁLOGO ============ */
+    .dialog {
+      width: min(1100px, calc(100vw - 36px));
+      max-height: min(820px, calc(100dvh - 36px));
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
+      border-radius: 24px;
+      color: var(--ink);
+      background: rgba(8, 18, 16, .94);
+      box-shadow: 0 30px 120px rgba(0, 0, 0, .65);
+      backdrop-filter: blur(26px);
+    }
+
+    .dialog::backdrop {
+      background: rgba(2, 7, 6, .76);
+      backdrop-filter: blur(10px);
+    }
+
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 23px 25px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .dialog-header h2 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: -.02em;
+    }
+
+    .dialog-header p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .close-button {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .03);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .close-button:hover {
+      color: var(--ink);
+      border-color: rgba(255, 255, 255, .28);
+    }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      padding: 20px 24px 26px;
+      max-height: calc(100dvh - 135px);
+      overflow: auto;
+    }
+
+    .map-card {
+      position: relative;
+      min-height: 118px;
+      padding: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      color: var(--ink);
+      background: rgba(255, 255, 255, .03);
+      text-align: left;
+      transition: transform 220ms var(--ease), border-color 220ms ease, background 220ms ease;
+    }
+
+    .map-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(var(--card-accent-rgb), .45);
+      background: rgba(var(--card-accent-rgb), .06);
+    }
+
+    .map-card[aria-current="true"] {
+      border-color: var(--card-accent);
+      background: rgba(var(--card-accent-rgb), .09);
+    }
+
+    .map-card small {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--card-accent);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .map-card strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .dialog-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 24px;
+      border-top: 1px solid var(--line);
+      color: var(--dim);
+      font-size: 10px;
+    }
+
+    .shortcuts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+    }
+
+    .shortcuts span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    kbd {
+      min-width: 21px;
+      padding: 3px 5px;
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .04);
+      font-family: inherit;
+      font-size: 9px;
+      text-align: center;
+    }
+
+    /* ============ AJUDA / TOAST ============ */
+    .help {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      display: none;
+      place-items: center;
+      padding: 24px;
+      background: rgba(2, 7, 6, .8);
+      backdrop-filter: blur(8px);
+    }
+
+    .help.show {
+      display: grid;
+    }
+
+    .help .box {
+      width: min(520px, 100%);
+      padding: 28px 32px;
+      border: 1px solid var(--line-2);
+      border-radius: 20px;
+      background: rgba(8, 18, 16, .96);
+      box-shadow: 0 30px 90px rgba(0, 0, 0, .5);
+    }
+
+    .help h4 {
+      margin: 0 0 18px;
+      font-size: 19px;
+      letter-spacing: -.02em;
+    }
+
+    .help dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px 20px;
+      margin: 0;
+      font-size: 13px;
+      align-items: center;
+    }
+
+    .help dt {
+      text-align: right;
+    }
+
+    .help dd {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(var(--footer-h) + var(--notes-h) + 18px);
+      z-index: 60;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(8, 18, 16, .9);
+      font-size: 11px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 8px);
+      transition: opacity 250ms ease, transform 250ms var(--ease), bottom 380ms var(--ease);
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .source {
+      margin: 0;
+      color: var(--dim);
+      font-size: 10px;
+      line-height: 1.6;
+    }
+
+    .source strong {
+      color: var(--muted);
+    }
+
+    /* ============ ANIMAÇÕES ============ */
+    @keyframes orbit-drift {
+      from { transform: translateY(-50%) rotate(-3deg); }
+      to { transform: translateY(-50%) rotate(4deg); }
+    }
+
+    @keyframes counter-orbit {
+      from { transform: rotate(var(--angle)) translateX(min(30vw, 400px)) rotate(calc(var(--angle) * -1)) rotate(0deg); }
+      to { transform: rotate(var(--angle)) translateX(min(30vw, 400px)) rotate(calc(var(--angle) * -1)) rotate(-360deg); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ============ RESPONSIVO ============ */
+    @media (max-width: 1180px) {
+      .dot-rail {
+        display: none;
+      }
+
+      .grid.g4,
+      .grid.g5,
+      .steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .slide.dense .grid.g4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 980px) {
+      :root {
+        --header-h: 64px;
+        --footer-h: 72px;
+      }
+
+      .slide {
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        align-items: start;
+        padding-top: calc(var(--header-h) + 26px);
+        padding-bottom: calc(var(--footer-h) + var(--notes-h) + 30px);
+      }
+
+      .g-21,
+      .g-12,
+      .g2,
+      .g3,
+      .grid.g4,
+      .grid.g5,
+      .steps,
+      .matrix,
+      .engines {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .engines .gearbox {
+        display: none;
+      }
+
+      .tl .it {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 4px;
+      }
+
+      .orbit {
+        top: 26%;
+        right: -38%;
+        width: 95vw;
+        opacity: .6;
+      }
+
+      .cover-index {
+        display: none;
+      }
+
+      .orbit-node {
+        transform: rotate(var(--angle)) translateX(min(44vw, 400px)) rotate(calc(var(--angle) * -1));
+      }
+
+      .map-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 700px) {
+      .topbar-center,
+      .brand-label,
+      .tool-button span,
+      .nav-button span,
+      .dialog-footer .source {
+        display: none;
+      }
+
+      .slide {
+        padding-inline: 20px;
+        padding-top: calc(var(--header-h) + 18px);
+      }
+
+      .display-title {
+        font-size: clamp(2.6rem, 16vw, 4.6rem);
+        line-height: .9;
+      }
+
+      .section-title {
+        font-size: calc(var(--fs) * 2);
+      }
+
+      .quote {
+        max-width: 100%;
+      }
+
+      .map-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 14px;
+      }
+
+      .dialog-footer {
+        justify-content: center;
+      }
+    }
+
+    @media (max-height: 640px) {
+      .slide {
+        padding-top: calc(var(--header-h) + 12px);
+        padding-bottom: calc(var(--footer-h) + var(--notes-h) + 12px);
+      }
+
+      .notes-panel {
+        height: 42vh;
+      }
+
+      body.notes-on {
+        --notes-h: 42vh;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    /* ============ IMPRESSÃO ============ */
+    @media print {
+      html,
+      body {
+        height: auto;
+        overflow: visible;
+        background: #fff;
+      }
+
+      .topbar,
+      .footer-nav,
+      .dot-rail,
+      .progress-track,
+      .ambient,
+      .noise,
+      dialog,
+      .notes-panel,
+      .toast,
+      .help {
+        display: none !important;
+      }
+
+      .deck {
+        height: auto;
+      }
+
+      .slide {
+        position: relative;
+        inset: auto;
+        display: grid;
+        min-height: 94vh;
+        padding: 22px 26px;
+        visibility: visible;
+        opacity: 1;
+        page-break-after: always;
+        break-after: page;
+        transform: none;
+        color: #111;
+        background: #fff;
+      }
+
+      .slide * {
+        color: #111 !important;
+      }
+
+      .card,
+      .stat,
+      .step,
+      .engine,
+      .callout,
+      .cmp,
+      .mq,
+      .pill {
+        border-color: #ccc;
+        background: #fafafa;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <button class="brand-button" type="button" data-goto="0" aria-label="Ir para a abertura">
+      <span class="brand-mark">M2</span>
+      <span class="brand-label">Motor 2</span>
+    </button>
+    <div class="topbar-center" id="sectionLabel">Abertura</div>
+    <div class="toolbar">
+      <button class="tool-button" id="mapButton" type="button" aria-label="Abrir mapa da apresentação" title="Mapa (M)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+        <span>Mapa</span>
+      </button>
+      <button class="tool-button" id="notesButton" type="button" aria-label="Mostrar notas do apresentador" aria-pressed="false" title="Notas (N)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v12H9l-5 4z"></path></svg>
+        <span>Notas</span>
+      </button>
+      <button class="tool-button" id="fullscreenButton" type="button" aria-label="Entrar em tela cheia" title="Tela cheia (F)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path></svg>
+        <span>Tela cheia</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="progress-track" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+
+  <main class="deck" id="deck">
+    <section class="slide cover is-active" data-title="A Estratégia do Motor 2" data-section="Abertura" data-label="Abertura" data-map="Abertura · Capa" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="orbit" aria-hidden="true">
+        <span class="orbit-core"></span>
+        <span class="orbit-node" style="--angle: 0deg; --delay: 0s">01</span>
+        <span class="orbit-node" style="--angle: 90deg; --delay: -5s">02</span>
+        <span class="orbit-node" style="--angle: 180deg; --delay: -10s">03</span>
+        <span class="orbit-node" style="--angle: 270deg; --delay: -15s">04</span>
+      </div>
+      <div class="cover-index" aria-hidden="true">30</div>
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Gestão &amp; Estratégia · Editora Gente, 2024</p>
+        <h1 class="display-title reveal">A Estratégia<br>do <em>Motor 2</em></h1>
+        <p class="display-subtitle reveal">Como tornar a inovação parte do dia a dia do seu negócio.</p>
+        <div class="cover-meta reveal">
+          <span><b>Sandro Magaldi</b> · meuSucesso</span>
+          <span class="dot" aria-hidden="true"></span>
+          <span><b>José Salibi Neto</b> · HSM</span>
+          <span class="dot" aria-hidden="true"></span>
+          <span>304 páginas</span>
+        </div>
+        <div class="cover-thesis reveal">
+          <div class="callout">
+            <p><b>Motor 2 ou morte:</b> para sobreviver, a empresa precisa rodar dois motores de crescimento ao mesmo tempo — a eficiência de hoje e a inovação de amanhã.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Abertura. Enquadre a promessa do livro: a maioria das empresas trata inovação como evento — um workshop, uma lista de ideias no papel — e não como rotina de gestão. Os autores defendem que a solução não é "mais eficiência": é <strong>arquitetar um segundo motor</strong> ao lado do que já funciona.</p></aside>
+    </section>
+
+    <section class="slide" data-title="Dois autores, uma tese" data-section="Abertura" data-label="Abertura" data-map="Os autores" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">01 · Quem escreveu</p>
+        <h2 class="section-title reveal">Dois autores, uma tese</h2>
+        <p class="lead reveal">Mais de 650 mil exemplares vendidos com <i>Gestão do Amanhã</i> — a linha da gestão exponencial no Brasil.</p>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card hi">
+              <div class="ico">SM</div>
+              <h3>Sandro Magaldi</h3>
+              <p>Cofundador da <b>meuSucesso</b>, uma das maiores plataformas de empreendedorismo do Brasil. VP de Clientes e Negócios do Grupo TV1 e Diretor Comercial da HSM por 9 anos. Professor em ESPM, FDC e PUCRS. Cerca de 30 anos de experiência em gestão estratégica e vendas; mais de 500 palestras.</p>
+            </div>
+            <div class="card vio">
+              <div class="ico">JN</div>
+              <h3>José Salibi Neto</h3>
+              <p>Cofundador da <b>HSM</b>, referência em educação executiva, e autor de 9 livros de negócios. Trabalhou por mais de duas décadas com Drucker, Welch, Porter e Kotler. MBA pela Darla Moore School of Business (EUA), onde recebeu o <i>Distinguished Alumnus Award</i>.</p>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>Por que o par funciona</h3>
+              <p>Um lado <b>comercial e de execução</b> (Magaldi) cruza com um lado <b>estratégico e acadêmico</b> (Salibi Neto). O resultado é um livro que não para na teoria: cada conceito vem com pergunta de gestão, número e decisão.</p>
+            </div>
+            <div class="card">
+              <h3>Continuidade com o primeiro livro</h3>
+              <p><i>Gestão do Amanhã</i> apresentou a revolução industrial e as novas premissas de gestão. Este livro resolve a pergunta que ficou: <b>e o executivo, na prática, roda a transformação?</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Posicione os autores como tradutores da gestão contemporânea para o mercado brasileiro — de Porter e Kotler para a sala de executiva C-level.</p></aside>
+    </section>
+
+    <section class="slide" data-title="O que vamos ver" data-section="Abertura" data-label="Abertura" data-map="O roteiro" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">02 · Roteiro</p>
+        <h2 class="section-title reveal">O que vamos ver</h2>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="card warm">
+              <div class="ico">⚙️</div>
+              <h3>O problema</h3>
+              <p>Por que eficiência sozinha mata a empresa — e o caso que prova isso.</p>
+            </div>
+            <div class="card hi">
+              <div class="ico">🔀</div>
+              <h3>Os dois motores</h3>
+              <p>DNA, ambição, risco, métrica e governança de cada motor.</p>
+            </div>
+            <div class="card vio">
+              <div class="ico">💡</div>
+              <h3>Como inovar de verdade</h3>
+              <p>Fracasso planejado, plataformização, canibalização, adjacências.</p>
+            </div>
+            <div class="card gr">
+              <div class="ico">🗺️</div>
+              <h3>Na sua empresa</h3>
+              <p>Arquitetura, framework de 8 passos, métricas e plano de 90 dias.</p>
+            </div>
+          </div>
+          <div class="grid g3">
+            <div class="card">
+              <h3>Casos</h3>
+              <p>Xerox PARC, Apple, AWS, iFood, Casas Bahia, Pix, Netflix, Ambev.</p>
+            </div>
+            <div class="card">
+              <h3>Ferramentas</h3>
+              <p>Célula de inovação, "jet ski", portfólio, scorecard do Motor 2.</p>
+            </div>
+            <div class="card">
+              <h3>Entregáveis</h3>
+              <p>Um plano de 90 dias para ligar o seu Motor 2.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Avise que a parte 4 é a mais prática: quem quiser sair com tarefa, pular para lá.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="ember" data-title="54 anos para construir, 5 para morrer" data-section="Parte 1 · O problema" data-label="Parte 1 · O problema" data-map="O problema" style="--card-accent:#ff8c61;--card-accent-rgb:255,140,97;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 1 · O problema</p>
+        <h2 class="section-title reveal">54 anos para construir. <em>5 anos para morrer.</em></h2>
+        <p class="lead reveal">A organização otimizada é uma organização condenada — se ela não tiver um segundo motor.</p>
+        <div class="s-body reveal">
+          <div class="grid g-21">
+            <div class="card warm">
+              <span class="tag">Caso real</span>
+              <h3>Casas Bahia</h3>
+              <p>Uma das maiores redes varejistas do Brasil, construída ao longo de meio século. Forte em logística, escala, prazo de entrega e gestão de custo — a cabal excelência do <b>Motor 1</b>.</p>
+              <p>O que faltou: nenhum bets investido em <b>Motor 2</b> — novos canais, novas experiências de compra, novos modelos de relação. Quando o comportamento do consumidor mudou, a escala virou <b>rigidez</b> e a defesa virou <b>peso morto</b>.</p>
+              <span class="pill m1" style="align-self:flex-start">Diagnóstico: eficiência extrema, zero Motor 2</span>
+            </div>
+            <div class="stack">
+              <div class="card">
+                <h3>A armadilha do sucesso</h3>
+                <p>Toda otimização que funciona vira <b>rotina</b>. Rotina que funciona vira <b>orçamento</b>. Orçamento que funciona vira <b>cultura de Não</b>. A empresa fica excelente naquilo que já ninguém mais compra.</p>
+              </div>
+              <div class="card">
+                <h3>A armadilha do fracasso</h3>
+                <p>Se toda aposta nova é julgada pelo mesmo critério do core — margem, prazo, volume —, o Motor 2 é julgado como fracasso <b>antes de nascer</b>. Nenhuma aposta ganha.</p>
+              </div>
+              <div class="callout warn">
+                <p><b>Motor 1 sem Motor 2 é uma troca de tempo:</b> você entrega o resultado de hoje e não compra o de amanhã.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Use o caso para desarmar a objeção "a gente já é eficiente". Eficiência é requisito, não estratégia. A pergunta certa não é "como executar melhor?", é "o que fazemos que, se der certo, torna irrelevantes as vantagens atuais?"</p></aside>
+    </section>
+
+    <section class="slide" data-tone="cyan" data-title="Dois motores, um só negócio" data-section="Parte 2 · Os motores" data-label="Parte 2 · Os motores" data-map="A tese central" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 2 · A tese</p>
+        <h2 class="section-title reveal">Dois motores. <em>Um só negócio.</em></h2>
+        <p class="lead reveal">A tese central do livro: crescimento sustentável exige <b>dois motores de crescimento</b> operando <b>simultaneamente</b> — com lógicas opostas.</p>
+        <div class="s-body reveal">
+          <div class="engines">
+            <div class="engine e1">
+              <div class="t">Motor 1</div>
+              <p class="d">O <b>negócio principal e atual</b>. Disciplina, melhoria contínua, redução de risco, máxima eficiência operacional. É onde nasce a caixa que financia o futuro.</p>
+              <div class="mini">Horizonte: meses · Risco: baixo · Governança: hierárquica</div>
+            </div>
+            <div class="gearbox" aria-hidden="true">
+              <div class="ring">⟳</div>
+              <small>engrenagens<br>combinadas</small>
+            </div>
+            <div class="engine e2">
+              <div class="t">Motor 2</div>
+              <p class="d">Os <b>negócios futuros</b>, gerados a partir de áreas adjacentes: novos marcos competitivos, novos fluxos de receitas e novas perspectivas estratégicas.</p>
+              <div class="mini">Horizonte: anos · Risco: alto · Governança: ágil e autônoma</div>
+            </div>
+          </div>
+          <div class="grid g3">
+            <div class="card">
+              <h3>Não é "ou"</h3>
+              <p>Não se escolhe um motor. Uma empresa sem Motor 1 não tem caixa; uma sem Motor 2 não tem futuro. O erro clássico é sequentializar: primeiro otimizar, depois inovar — e nunca chegar na segunda fase.</p>
+            </div>
+            <div class="card">
+              <h3>Não é "misturar"</h3>
+              <p>Colocar todo mundo na mesma estrutura e nas mesmas regras mata a inovação. Cada motor precisa de <b>regra, ritmo e métrica próprios</b>.</p>
+            </div>
+            <div class="card hi">
+              <h3>É equilíbrio intencional</h3>
+              <p>O equilíbrio não é fixo: muda conforme o estágio, o setor e a tecnologia. O que não muda é a <b>existência dos dois</b>.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Analogia útil: trem e vela. A vela move o barco agora, o motor permite amanhar. Nenhum substitui o outro. Ou, mais direto: o Motor 1 compra permissão para fazer o Motor 2.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="ember" data-title="Motor 1: a engenharia da eficiência" data-section="Parte 2 · Os motores" data-label="Parte 2 · Os motores" data-map="Motor 1" style="--card-accent:#ff8c61;--card-accent-rgb:255,140,97;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 2 · Motor 1</p>
+        <h2 class="section-title reveal">Motor 1: a engenharia da eficiência</h2>
+        <p class="lead reveal">Onde a empresa ganha dinheiro hoje. Sem ele, não existe <em>pivot</em> para o novo — existe só dívida.</p>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="card warm">
+              <div class="ico">⚙️</div>
+              <h3>Processos</h3>
+              <p>Padronização, melhoria contínua, eliminação de desperdício, automação de tudo que é repetitivo.</p>
+            </div>
+            <div class="card warm">
+              <div class="ico">🛡️</div>
+              <h3>Risco</h3>
+              <p>Monitoramento constante dos riscos operacionais e financeiros. Blindagem do negócio principal.</p>
+            </div>
+            <div class="card warm">
+              <div class="ico">📈</div>
+              <h3>Escala</h3>
+              <p>Mercados em crescimento, novas geografias com a mesma tecnologia, ganho de custo por volume.</p>
+            </div>
+            <div class="card warm">
+              <div class="ico">💰</div>
+              <h3>Caixa</h3>
+              <p>Margem previsível que financia o Motor 2. Sem geração de caixa, não há aposta — só ilusão.</p>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="card warm">
+              <h3>Como se mede</h3>
+              <div class="stack" style="margin-top:calc(var(--fs) * .3)">
+                <div class="meter">
+                  <div class="top"><b>Margem EBITDA</b><em>pontos percentuais</em></div>
+                  <div class="bar"><span style="width:78%"></span></div>
+                </div>
+                <div class="meter">
+                  <div class="top"><b>Receita vs. meta</b><em>% do plano</em></div>
+                  <div class="bar"><span style="width:64%"></span></div>
+                </div>
+                <div class="meter">
+                  <div class="top"><b>Turnover / giro de estoque</b><em>eficiência</em></div>
+                  <div class="bar"><span style="width:71%"></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3>O risco escondido</h3>
+              <p>Quando o Motor 1 é gerenciado por gente que <b>só conhece o Motor 1</b>, ele vira um monopólio de atenção. A empresa melhora o que já funciona e chama isso de estratégia. Esse é o ponto cego que o livro ataca.</p>
+              <div class="callout warn" style="margin-top:calc(var(--fs) * .3)">
+                <p>Eficiência que não libera ninguém para o futuro é apenas <b>otimização da sobrevivência</b>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Reforce: o livro não é contra eficiência. É contra <i>uma organização inteira</i> tratada como eficiência. Motor 1 bem gerenciado é pré-requisito, não estratégia.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="cyan" data-title="Motor 2: a engenharia do futuro" data-section="Parte 2 · Os motores" data-label="Parte 2 · Os motores" data-map="Motor 2" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 2 · Motor 2</p>
+        <h2 class="section-title reveal">Motor 2: a engenharia do futuro</h2>
+        <p class="lead reveal">Negócios adjacentes, novos produtos e serviços, mercados novos e existentes — é ele que <b>expande o potencial</b> da organização.</p>
+        <div class="s-body reveal">
+          <div class="grid g-21">
+            <div class="card hi">
+              <h3>De onde nasce o Motor 2</h3>
+              <ul class="list">
+                <li><b>Negócios adjacentes</b> — o que não é o seu negócio, mas tem a mesma lógica, o mesmo cliente ou a mesma tecnologia.</li>
+                <li><b>Novos fluxos de receitas</b> — subscription, marketplace, advertising, serviços, royalties, licensing.</li>
+                <li><b>Novos marcos competitivos</b> — ocupar uma posição que hoje pertence a outro.</li>
+                <li><b>Novas geografias e novos mercados</b> em crescimento, com o portfólio atual ou com produto novo.</li>
+                <li><b>Novos produtos e serviços</b> em mercados já existentes.</li>
+              </ul>
+            </div>
+            <div class="stack">
+              <div class="card vio">
+                <h3>Postura de gestão</h3>
+                <p>Agilidade, maior propensão ao risco, originalidade, experimentação. Uma <b>estrutura financeira específica</b> — orçamento protegido que não pode ser drenado pelo core.</p>
+              </div>
+              <div class="card vio">
+                <h3>Ofensiva e defensiva</h3>
+                <p>O Motor 2 não serve só para crescer. Ele é o movimento que <b>protege a empresa da própria disruptão</b>: ou você disrupta, ou alguém disrupta você.</p>
+              </div>
+              <div class="card gr">
+                <h3>Posicionamento</h3>
+                <p>De fornecedor de produto a <b>protagonista de ecossistema</b>. De competidor solitário a orquestrador de parceiros, dados, plataformas e atenção.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Defina "adjacente" de forma operacional: mesma base de clientes, mesma tecnologia, mesma cadeia de produção ou mesmo canal — mas não exatamente o mesmo negócio.</p></aside>
+    </section>
+
+    <section class="slide dense" data-tone="violet" data-title="São duas empresas dentro da mesma empresa" data-section="Parte 2 · Os motores" data-label="Parte 2 · Os motores" data-map="O contraste" style="--card-accent:#aa91ff;--card-accent-rgb:170,145,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 2 · O contraste</p>
+        <h2 class="section-title reveal">São duas empresas dentro da mesma empresa</h2>
+        <div class="s-body reveal">
+          <div class="cmp">
+            <div class="h"><div></div><div class="a">Motor 1 — eficiência</div><div class="b">Motor 2 — inovação</div></div>
+            <div class="r"><div class="lbl">Ambição</div><div class="a">Fazer o negócio atual render mais</div><div class="b">Criar um negócio que ainda não existe</div></div>
+            <div class="r"><div class="lbl">Postura</div><div class="a">Disciplina e controle</div><div class="b">Agilidade, risco e originalidade</div></div>
+            <div class="r"><div class="lbl">Fonte de receita</div><div class="a">Vender mais do que já se vende</div><div class="b">Novos fluxos de receita e novos mercados</div></div>
+            <div class="r"><div class="lbl">Horizonte</div><div class="a">Meses a 1 ano</div><div class="b">2 a 5 anos</div></div>
+            <div class="r"><div class="lbl">Orçamento</div><div class="a">Centro de custo / P&amp;L do core</div><div class="b">Bolsa protegida, fundo próprio, P&amp;L separado</div></div>
+            <div class="r"><div class="lbl">Liderança</div><div class="a">Operacional, execução rigorosa</div><div class="b">Empreendedor interno, autonomia de decisão</div></div>
+            <div class="r"><div class="lbl">Métrica</div><div class="a">Margem, receita, custo, giro, share</div><div class="b">Experimentos, aprendizado, pipeline de receitas novas, MVPI</div></div>
+            <div class="r"><div class="lbl">Gestão do fracasso</div><div class="a">Erro é perda — eliminar</div><div class="b">Erro é <b>informação comprada</b> — planejar</div></div>
+          </div>
+          <div class="callout">
+            <p>O erro de gestão mais caro não é escolher o motor errado. É <b>gerenciar o Motor 2 com as regras do Motor 1</b>.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Use esta tabela como "cola" do participante. Sugira fotografar. O ponto de maior impacto costuma ser a linha de orçamento e a de métrica.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="violet" data-title="Os paradoxos do equilíbrio" data-section="Parte 2 · Os motores" data-label="Parte 2 · Os motores" data-map="As tensões" style="--card-accent:#aa91ff;--card-accent-rgb:170,145,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 2 · Tensões</p>
+        <h2 class="section-title reveal">Os paradoxos do equilíbrio</h2>
+        <p class="lead reveal">Os dois motores se alimentam — e ao mesmo tempo sabotam um ao outro. O trabalho do líder é administrar a tensão.</p>
+        <div class="s-body reveal">
+          <div class="grid g3">
+            <div class="card vio">
+              <div class="ico">⚔️</div>
+              <h3>Paradoxo da atenção</h3>
+              <p>O core sempre pede o último minuto. O Motor 2, por natureza, pede o primeiro. Quem ganha a disputa de agenda define o futuro da empresa.</p>
+            </div>
+            <div class="card vio">
+              <div class="ico">💸</div>
+              <h3>Paradoxo do orçamento</h3>
+              <p>Orçamento protegido que pode ser cortado no primeiro trimestre difícil é orçamento que não existe. Sem blindagem, o Motor 2 morre de inanição em todo downturn.</p>
+            </div>
+            <div class="card vio">
+              <div class="ico">🧠</div>
+              <h3>Paradoxo das pessoas</h3>
+              <p>Os melhores talentos vão para onde há resultado e autonomia. Se o Motor 2 é um "projeto paralelo" sem status, ele vira o lugar onde vão as sobras de time.</p>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>Regra prática do equilíbrio</h3>
+              <ul class="list">
+                <li><b>Não concorra com o core por recursos.</b> Tenha fonte própria de funding — parceria, venture, linha de receita existente.</li>
+                <li><b>Não concorra com o core por pessoas.</b> Mova pessoas para o Motor 2 por período determinado, com retorno definido.</li>
+                <li><b>Não concorra com o core por estratégia.</b> O comitê do core não vota no portfólio de experimentos.</li>
+              </ul>
+            </div>
+            <div class="card hi">
+              <h3>A pergunta de calibragem</h3>
+              <p>De 100 unidades de energia da organização, quanto vai para o <b>Motor 1</b> e quanto para o <b>Motor 2</b>? A maioria das empresas responde 100–0. As que sobrevivem à próxima década respondem algo como 70–30.</p>
+              <div class="scale" style="margin-top:calc(var(--fs) * .6)">
+                <span class="l1">Motor 1 · 70%</span>
+                <div class="bar"><span style="width:70%;background:linear-gradient(90deg,var(--m1),var(--m2))"></span></div>
+                <span class="l2">30% Motor 2</span>
+              </div>
+              <p class="micro" style="margin-top:calc(var(--fs) * .5)">A proporção varia por estágio — a regra é nunca zero.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Se o grupo for executivo, peça para cada um dizer seu número atual de atenção dedicada ao Motor 2. A maioria diz menos de 5%.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="danger" data-title="A empresa que inventou e ficou com zero" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Caso Xerox" style="--card-accent:#ff5d59;--card-accent-rgb:255,93,89;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Casos</p>
+        <h2 class="section-title reveal">A empresa que inventou trilhões — e ficou com <em>zero</em></h2>
+        <div class="s-body reveal">
+          <div class="grid g-21">
+            <div class="card warm">
+              <h3>Xerox PARC, 1979</h3>
+              <p>Steve Jobs visita o laboratório da Xerox. Fica <b>10 minutos</b> — segundo os autores, tempo suficiente para ver a interface gráfica, o mouse e o computador pessoal em forma de máquina.</p>
+              <p>Sai de lá com a ideia que criou o computador pessoal, a interface gráfica e, em boa parte, o mundo moderno.</p>
+              <div class="row" style="margin-top:calc(var(--fs) * .3)">
+                <div class="stat m1">
+                  <span class="n">US$ 3 tri</span>
+                  <span class="l">valor gerado pela Apple com essas ideias</span>
+                </div>
+                <div class="stat red">
+                  <span class="n">US$ 0</span>
+                  <span class="l">valor capturado pela Xerox</span>
+                </div>
+              </div>
+            </div>
+            <div class="stack">
+              <div class="card red">
+                <h3>O paradoxo brutal</h3>
+                <p>A Xerox tinha a tecnologia e vendeu a peça que destroyia o seu negócio: a máquina de copiar. A Apple comprou a ideia, não o produto — e capturou o valor.</p>
+              </div>
+              <div class="card">
+                <h3>Duas lições</h3>
+                <ul class="list num">
+                  <li><b>Ter a tecnologia não é ter a visão.</b> O laboratório olhava para dentro, para a melhoria do core.</li>
+                  <li><b>Sem Motor 2, a inovação é exportada.</b> Quem não a transforma em negócio entrega o valor de graça — e muitas vezes para um concorrente.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Contraste Optical: a Xerox tinha também o Gunther GT-70. Relembre que várias empresas têm um "departamento de inovação" que inova — mas em favor do core, não em favor do futuro.</p></aside>
+    </section>
+
+    <section class="slide" data-title="AWS: quando o custo vira receita" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Caso AWS" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Casos</p>
+        <h2 class="section-title reveal">AWS: quando o custo vira receita</h2>
+        <p class="lead reveal">O exemplo canônico de transformar uma decisão de eficiência — terceirizar infraestrutura — em um <b>negócio adjacente</b>.</p>
+        <div class="s-body reveal">
+          <div class="grid g3">
+            <div class="card">
+              <div class="ico">💸</div>
+              <h3>O ponto de partida</h3>
+              <p>A Amazon estava queimando <b>cerca de US$ 500 milhões por ano</b> só com infraestrutura para operar o próprio site. Era um custo puro, um problema do Motor 1.</p>
+            </div>
+            <div class="card hi">
+              <div class="ico">🔄</div>
+              <h3>A virada</h3>
+              <p>Em vez de apenas reduzir o custo, a empresa <b>empacotou a capacidade como produto</b> e a vendeu para o mercado: foi assim que nasceu a Amazon Web Services.</p>
+            </div>
+            <div class="card vio">
+              <div class="ico">🚀</div>
+              <h3>Onde está hoje</h3>
+              <p>Um negócio de infraestrutura que se tornou <b>bilionário</b> — lucrando de um custo que, no Motor 1, era tratado como despesa a eliminar.</p>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="callout good">
+              <p><b>Regra do Motor 2:</b> cada vez que a empresa resolver um problema caro do core, pergunte — <b>isso é só custo, ou é um negócio que alguém pagaria para não ter?</b></p>
+            </div>
+            <div class="card">
+              <h3>Onde procurar o seu AWS</h3>
+              <ul class="list">
+                <li>Qual <b>capacidade interna</b> você tem e nunca vendeu?</li>
+                <li>Qual <b>processo caro</b> seus clientes fazem manualmente porque você nunca o ofereceu?</li>
+                <li>Qual <b>ferramenta interna</b> só funciona porque a empresa é grande?</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Conexão com o livro: "custo interno convertido em fluxo de receita" é um dos caminhos mais subestimados de Motor 2, porque a empresa já tem o know-how e a base instalada.</p></aside>
+    </section>
+
+    <section class="slide" data-title="iFood: 95% fracassam" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Caso iFood" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Casos</p>
+        <h2 class="section-title reveal">iFood: 95% fracassam — e é <em>exatamente por isso</em> que funciona</h2>
+        <p class="lead reveal">O caso que legitima o fracasso planejado como metodologia, e não como desculpa.</p>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="stat red">
+              <span class="n">95%</span>
+              <span class="l">das inovações morrem na primeira fase</span>
+            </div>
+            <div class="stat gr">
+              <span class="n">49%</span>
+              <span class="l">da receita atual vem dessas apostas</span>
+            </div>
+            <div class="stat m2">
+              <span class="n">#1</span>
+              <span class="l">em entrega de comida no país, após a escala</span>
+            </div>
+            <div class="stat vio">
+              <span class="n">Jet ski</span>
+              <span class="l">modelo de célula autônoma usada pela empresa</span>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>A matemática do fracasso planejado</h3>
+              <p>Se 95% morrem e o que sobra gera <b>49% da receita</b>, o valor esperado das apostas é positivo desde que a estrutura exista. O erro não é errar — é <b>parar de testar cedo demais</b> ou <b>não aprender com o erro</b>.</p>
+              <ul class="list num" style="margin-top:calc(var(--fs) * .3)">
+                <li>Hipótese explícita antes do experimento</li>
+                <li>Critério de avanço definido <i>antes</i> do teste</li>
+                <li>Aprendizado documentado e reaproveitado</li>
+              </ul>
+            </div>
+            <div class="card hi">
+              <h3>Célula "jet ski"</h3>
+              <p>Um time pequeno, separado, com autonomia para decidir e com um mandato claro: <b>não precisa seguir o processo do core</b> — precisa aprender rápido.</p>
+              <p>Velocidade, foco e um único objetivo por vez. Sem comitê inflado de direção.</p>
+              <div class="callout" style="margin-top:calc(var(--fs) * .3)">
+                <p>"Jet ski" = estrutura leve, rápida e separada — o antídoto contra a burocracia corporativa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Destaque: 95% de fracasso só é aceitável se o custo por experimento for baixo e o aprendizado for capturado. Se o fracasso custa R$ 50 milhões e ninguém aprende, isso não é Motor 2 — é superstição.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="ember" data-title="Quando o disruptor não é o concorrente" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Pix e Casas Bahia" style="--card-accent:#ff8c61;--card-accent-rgb:255,140,97;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Casos</p>
+        <h2 class="section-title reveal">Quando o disruptor não é o concorrente</h2>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card hi">
+              <span class="tag">Brasil</span>
+              <h3>Pix: disruptão governamental</h3>
+              <p>O Banco Central conseguiu em <b>3 anos</b> algo que bancos tradicionais e fintechs não conseguiram em décadas: um pagamento instantâneo, gratuito e universal.</p>
+              <div class="row">
+                <div class="stat m2">
+                  <span class="n">+800 mi</span>
+                  <span class="l">chaves Pix criadas</span>
+                </div>
+                <div class="stat m2">
+                  <span class="n">63,8 bi</span>
+                  <span class="l">transações realizadas</span>
+                </div>
+              </div>
+              <p>Lição: um ecossistema externo, com infraestrutura pública, define o teto do seu mercado. Se o seu modelo vive de fricção, ele está morto — mesmo sendo lucrativo.</p>
+            </div>
+            <div class="card warm">
+              <span class="tag">Brasil</span>
+              <h3>Casas Bahia: o contraponto</h3>
+              <p>54 anos de operação exemplar no Motor 1 e <b>5 anos até o fim</b>. Acompanhou todas as alavancas de eficiência que a época permitia — e não viu a virada do comportamento de consumo.</p>
+              <ul class="list" style="margin-top:calc(var(--fs) * .2)">
+                <li><b>Speed.</b> Escala é uma benção quando a curva é estável; é uma âncora quando o cliente muda de direção.</li>
+                <li><b>Cultura.</b> Uma empresa que premia quem executa o plano não atrai quem questiona o plano.</li>
+                <li><b>Timing.</b> A onda de inovação chegou depois de a base de clientes estar fidelizada em outro lugar.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout warn">
+            <p><b>Motor 2 ou morte</b> não é slogan: é a constatação de que empresas não morrem de falta de eficiência — morrem de <b>falta de futuro</b>.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Pergunte ao grupo: qual é o Pix do seu setor? Quem pode, do dia para hoje, redesenhar sua categoria — e ainda não sentou na sua mesa?</p></aside>
+    </section>
+
+    <section class="slide" data-tone="danger" data-title="Por que as empresas não inovam de verdade" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Por que não inovam" style="--card-accent:#ff5d59;--card-accent-rgb:255,93,89;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Diagnóstico</p>
+        <h2 class="section-title reveal">Por que as empresas não inovam de verdade</h2>
+        <p class="lead reveal">Quatro filtros que transformam boa ideia em fracasso — e que você pode desativar.</p>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="card">
+              <div class="ico">🚪</div>
+              <h3>Filtro 1 · Portão de entrada</h3>
+              <p>Toda nova ideia passa pelo mesmo comitê e pelos mesmos critérios do core. Se não couber na planilha atual, é arquivada — <b>antes</b> de qualquer teste com o cliente.</p>
+            </div>
+            <div class="card">
+              <div class="ico">👔</div>
+              <h3>Filtro 2 · Medo de canibalizar</h3>
+              <p>Se a nova receita tira venda da atual, o incentivo é matar a iniciativa. O cérebro empresarial prefere defender o presente a apostar no futuro — e o futuro não perdoa.</p>
+            </div>
+            <div class="card">
+              <div class="ico">🗂️</div>
+              <h3>Filtro 3 · Backlog de ideias</h3>
+              <p>Chuva de ideias sem experimentação. A organização coleciona "iniciativas de inovação" em vez de aprender com clientes. Ideias são baratas; aprendizado é caro.</p>
+            </div>
+            <div class="card">
+              <div class="ico">📉</div>
+              <h3>Filtro 4 · Medida pela média</h3>
+              <p>O Motor 2 é medido com o mesmo KPI do core. Como as métricas resultantes são por natureza diferentes, ele sempre fica abaixo — e perde o orçamento.</p>
+            </div>
+          </div>
+          <div class="callout bad">
+            <p>O antídoto para os quatro filtros é o mesmo: <b>um Motor 2 com arquitetura própria</b> — time, orçamento, métrica e ritmo próprios.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Use como checklist de autodiagnóstico: peça para a sala pontuar de 0 a 4 quantos filtros sua empresa ativa.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="cyan" data-title="Fracasso planejado" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Fracasso planejado" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Metodologia</p>
+        <h2 class="section-title reveal">Fracasso planejado</h2>
+        <p class="lead reveal">A metodologia central do livro para sair da ideia abstrata e chegar à decisão.</p>
+        <div class="s-body reveal">
+          <div class="steps">
+            <div class="step"><span class="n" data-n="1"></span><h4>Defina a hipótese</h4><p>Escreva, em uma frase, o que você acredita e por quê. Sem hipótese não há experimento — há opinião.</p></div>
+            <div class="step"><span class="n" data-n="2"></span><h4>Escolha o teste mais barato</h4><p>Não o melhor teste, o mais informativo pelo menor custo e menor tempo.</p></div>
+            <div class="step"><span class="n" data-n="3"></span><h4>Preste o cliente real</h4><p>Protótipo, landing page, pré-venda, entrevista. Valide comportamento, não opinião.</p></div>
+            <div class="step"><span class="n" data-n="4"></span><h4>Fixe o critério de decisão</h4><p>Antes de rodar: o que precisa acontecer para avançar, o que faz abortar, quando se decide.</p></div>
+            <div class="step"><span class="n" data-n="5"></span><h4>Decida rápido</h4><p>Avançar, pivotar ou abortar. Decisão de parar custa mais caro que decisão de continuar.</p></div>
+            <div class="step"><span class="n" data-n="6"></span><h4>Capture o aprendizado</h4><p>Registre o que foi aprendido, mesmo quando abortar. Reutilize em outras iniciativas.</p></div>
+            <div class="step"><span class="n" data-n="7"></span><h4>Padronize a repetição</h4><p>Transforme o que funcionou em método. Sem isso, cada iniciativa recomeça do zero.</p></div>
+            <div class="step"><span class="n" data-n="8"></span><h4>Realoque capital</h4><p>Tire dinheiro do que perdeu e coloque no que ganhou — com velocidade.</p></div>
+          </div>
+          <div class="callout">
+            <p><b>Inovação é um processo de eliminação</b>, não um evento de faísca genial. Cada hipótese derrubada é um ativo, se for documentada.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Este é o slide mais aplicável: proponha que cada pessoa escolha uma iniciativa atual e escreva a hipótese em uma frase, agora, em 2 minutos.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="violet" data-title="Plataformização de concorrentes" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Plataformização" style="--card-accent:#aa91ff;--card-accent-rgb:170,145,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Ambição</p>
+        <h2 class="section-title reveal">Plataformização de concorrentes</h2>
+        <p class="lead reveal">De <b>vender para</b> o concorrente a <b>ser o canal</b> dele. Um movimento que transforma rivais em clientes.</p>
+        <div class="s-body reveal">
+          <div class="grid g-21">
+            <div class="card vio">
+              <span class="tag">Caso citado</span>
+              <h3>Ambev vende cerveja Heineken</h3>
+              <p>A maior produtora de cervejas do Brasil — e uma das concorrentes diretas da Heineken no linear — <b>plataformizou a distribuição</b> e passou a vender a marca rival em sua própria operação.</p>
+              <p>O que era conflito virou receita. A empresa deixou de vender cerveja e passou a vender <b>canal</b>.</p>
+            </div>
+            <div class="stack">
+              <div class="card">
+                <h3>Como pensar</h3>
+                <p>Existe uma camada da sua operação que é útil <b>para todo mundo do setor</b> — e que você trata como custo interno? Essa camada é candidata a Motor 2.</p>
+              </div>
+              <div class="card">
+                <h3>Tesouros de plataformização</h3>
+                <ul class="list">
+                  <li><b>Distribuição e logística</b> — sua rota como serviço</li>
+                  <li><b>Dados e inteligência</b> — seu dado de mercado como produto</li>
+                  <li><b>Confiança e padrão</b> — seu selo ou certificação como infraestrutura</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="grid g3">
+            <div class="stat gr">
+              <span class="n">+</span>
+              <span class="l">receita sem novo produto próprio</span>
+            </div>
+            <div class="stat m2">
+              <span class="n">≈ 0</span>
+              <span class="l">capex adicional</span>
+            </div>
+            <div class="stat vio">
+              <span class="n">↑</span>
+              <span class="l">poder de negociação com a indústria</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Cuidado para não virar "vender espaço de prateleira" (caso do celular). Explique o critério: plataformizar quando a sua vantagem de canal é maior que o conflito de canal.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="danger" data-title="Auto-canibalização estratégica" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Canibalização" style="--card-accent:#ff5d59;--card-accent-rgb:255,93,89;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Ambição</p>
+        <h2 class="section-title reveal">Auto-canibalização estratégica</h2>
+        <p class="lead reveal">Se você não canibaliza o seu negócio, alguém vai. A questão é <b>como</b> e <b>quando</b>.</p>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card warm">
+              <span class="tag">Caso icônico</span>
+              <h3>Netflix matou o DVD</h3>
+              <p>A empresa de streaming mais valiosa do mundo nasceu da decisão de matar o seu próprio negócio principal. Não por falha, mas por <b>convergência estratégica</b>: percebeu que o DVD era o fim da própria história.</p>
+              <p>A Netflix não esperou um disruptor externo. Ela foi o disruptor — e por isso deixou de ser alvo.</p>
+            </div>
+            <div class="stack">
+              <div class="card red">
+                <h3>Por que é tão difícil</h3>
+                <p>A divisão que canibaliza a si mesma é, <b>por definição</b>, a que perde o budget e o bônus. Ninguém quer ser o agressor da própria receita.</p>
+              </div>
+              <div class="card">
+                <h3>Como fazer sem se destruir</h3>
+                <ul class="list num">
+                  <li><b>Unidade separada</b> com P&amp;L e identidade próprios</li>
+                  <li><b>Métrica de migração</b>, não de skills: clientes movidos, receita protegida</li>
+                  <li><b>Recompensa pela transição</b> — premiar quem entrega o novo, não quem defende o velho</li>
+                  <li><b>Prazo definido</b>: a decisão de matar tem data, senão vira adiamento eterno</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="callout bad">
+            <p>A pergunta do Motor 2 não é "esta ideia é boa?". É: <b>"qual é a nossa próxima linha de receita que vai tornar esta irrelevante — e somos nós ou alguém de fora?"</b></p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Nem toda empresa deve canibalizar. A canibalização é tática de defesa e renovação para empresas de base instalada e alto volume. Não é para todo mundo.</p></aside>
+    </section>
+
+    <section class="slide dense" data-title="Onde a inovação deve viver" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Onde inovar" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Ambição</p>
+        <h2 class="section-title reveal">Onde a inovação deve viver</h2>
+        <p class="lead reveal">Se a estrutura não mudar, a inovação não acontece — por mais que a estratégia esteja certa no papel.</p>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="card red">
+              <div class="ico">✕</div>
+              <h3>Não funciona</h3>
+              <h4>Departamento de inovação central</h4>
+              <p>Fica longe do cliente e longe do P&amp;L. Vira centro de custo que guarda ideias, não negócio.</p>
+            </div>
+            <div class="card red">
+              <div class="ico">✕</div>
+              <h3>Não funciona</h3>
+              <h4>Integração no core</h4>
+              <p>As demandas do core engolem as de inovação no primeiro trimestre. O time se dissolve no BAU.</p>
+            </div>
+            <div class="card gr">
+              <div class="ico">✓</div>
+              <h3>Funciona</h3>
+              <h4>Célula de inovação</h4>
+              <p>Time dedicado, com mandato, orçamento e autonomia. Responde a um desafio de negócio, não a uma área.</p>
+            </div>
+            <div class="card gr">
+              <div class="ico">✓</div>
+              <h3>Funciona</h3>
+              <h4>Modelo "jet ski"</h4>
+              <p>Célula enxuta com altíssima autonomia, ritmo de startup e um objetivo por vez. Guarda a distância do core.</p>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>Princípios da célula / jet ski</h3>
+              <ul class="list">
+                <li>Time pequeno, multidisciplinar e com <b>decisão</b> — não só recomendação</li>
+                <li>Um desafio de negócio explícito, com o cliente definido</li>
+                <li>Orçamento protegido e horizonte próprio</li>
+                <li>Saída planejada: se não escalar em X meses, a célula fecha — e isso é bom</li>
+              </ul>
+            </div>
+            <div class="card hi">
+              <h3>A desligação do core</h3>
+              <p>A célula precisa de <b>blindagem</b>: não precisa seguir o processo do core, não precisa usar o mesmo formulário, não precisa responder ao mesmo chefe de prazo.</p>
+              <p>É a razão de a célula ser <b>estrutura separada</b> e não um "projeto especial" dentro da hierarquia.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Analogia: o viveiro. A célula é uma estufa — dentro, temperatura, luz e ritmo diferentes do campo aberto. Depois a muda é transplantada para o campo.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="cyan" data-title="Onde procurar: as quatro adjacências" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="As quatro adjacências" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Ambição</p>
+        <h2 class="section-title reveal">Onde procurar: as quatro adjacências</h2>
+        <p class="lead reveal">A matriz de Ansoff adaptada à realidade do Motor 2 — da aposta mais segura à mais disruptiva.</p>
+        <div class="s-body reveal">
+          <div class="matrix">
+            <div class="mq l1">
+              <div class="t">1 · Canais e formatos</div>
+              <p class="d">Mesmo produto, novo caminho de entrega. É a porta de entrada mais segura: baixo risco, aprendizado rápido.</p>
+            </div>
+            <div class="mq l2">
+              <div class="t">2 · Novos clientes</div>
+              <p class="d">Novo segmento ou novo perfil de consumidor, com a mesma oferta. Boa aposta para quem já tem marca forte.</p>
+            </div>
+            <div class="mq l3">
+              <div class="t">3 · Novos mercados</div>
+              <p class="d">Nova geografia ou novo segmento com o portfólio atual. Exige adaptação, mas o produto já existe.</p>
+            </div>
+            <div class="mq l4">
+              <div class="t">4 · Novos negócios</div>
+              <p class="d">Produto, serviço e mercado novos ao mesmo tempo. A aposta mais alta — e a que mais exige um Motor 2 maduro.</p>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>Ordem prática sugerida</h3>
+              <p>Comece pelo quadrante <b>1 (canais)</b> para criar competência interna de experimentação, avance para <b>2 (clientes)</b>, depois <b>3 (mercados)</b> e só então <b>4 (negócios novos)</b>. Pular etapas é como instalar um sistema sem calibrar.</p>
+            </div>
+            <div class="card vio">
+              <h3>Sinais de que é hora de avançar</h3>
+              <ul class="list">
+                <li>Você já <b>entrega</b> além do core há 12+ meses</li>
+                <li>A nova receita já é <b>material</b> — e não bônus</li>
+                <li>Você tem <b>case de sucesso interno</b> documentado</li>
+                <li>O time do core já não absorve novas apostas sem travar</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Confirme a origem da matriz: ela é da literatura (Igor Ansoff, 1957) — o livro a usa como ferramenta de mapeamento de adjacências. Vale creditar.</p></aside>
+    </section>
+
+    <section class="slide" data-title="Inovar para o cliente, não para a ideia" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Ideia x demanda" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Demandas</p>
+        <h2 class="section-title reveal">Inovar para o cliente, <em>não para a ideia</em></h2>
+        <p class="lead reveal">"Ideia" é o que a empresa consegue imaginar. "Demanda" é o que o cliente pagaria para resolver — hoje.</p>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card red">
+              <h3>Inovação de ideias abstratas</h3>
+              <ul class="list cross">
+                <li>Começa num brainstorm interno, não numa dor de cliente</li>
+                <li>"Seria incrível se a gente tivesse..."</li>
+                <li>Medida por engagement interno e entusiasmo da equipe</li>
+                <li>Risco alto de construir o que ninguém quer</li>
+                <li>Prazo de 2 anos antes do primeiro cliente real</li>
+              </ul>
+            </div>
+            <div class="card gr">
+              <h3>Inovação de demandas reais</h3>
+              <ul class="list check">
+                <li>Começa numa dor concreta de um cliente nomeado</li>
+                <li>"Se eu resolvesse isso, ele pagaria porque..."</li>
+                <li>Medida por comportamento observado e receita do piloto</li>
+                <li>Teste barato antes de qualquer construção</li>
+                <li>Pilotos com clientes nos primeiros 90 dias</li>
+              </ul>
+            </div>
+          </div>
+          <div class="grid g3">
+            <div class="card">
+              <h3>Passo 1 · Escute</h3>
+              <p>Entrevistas, análise de chamados, registros de cancelamento e dados de público-alvo. A dor está no dado, não na imaginação.</p>
+            </div>
+            <div class="card">
+              <h3>Passo 2 · Recorte</h3>
+              <p>Escolha <b>um</b> segmento e <b>uma</b> dor prioritária. "Todos os clientes" não é um público-alvo.</p>
+            </div>
+            <div class="card">
+              <h3>Passo 3 · Prove</h3>
+              <p>Venda antes de construir. Pré-venda, carta de intenção, protótipo operável. Se ninguém assinar, você economizou um ano.</p>
+            </div>
+          </div>
+          <div class="callout">
+            <p>Atender demandas de forma <b>superior</b> — e não mais barata, nem mais bonita — é o que sobrevive à concorrência e ao empoderamento dos clientes.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Este slide conecta com a promessa do livro: inovar de verdade, em vez de se restringir a ideias abstratas. Dê um exemplo concreto do setor do público presente.</p></aside>
+    </section>
+
+    <section class="slide dense" data-tone="violet" data-title="De produto a ecossistema" data-section="Parte 3 · Ambição" data-label="Parte 3 · Ambição" data-map="Ecossistemas" style="--card-accent:#aa91ff;--card-accent-rgb:170,145,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 3 · Ambição</p>
+        <h2 class="section-title reveal">De produto a <em>ecossistema</em></h2>
+        <p class="lead reveal">A menor ambição é vender um produto. A maior é orquestrar um ecossistema — e virar o ponto por onde tudo passa.</p>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="card">
+              <span class="tag">Nível 1</span>
+              <div class="ico">📦</div>
+              <h3>Produto</h3>
+              <p>Você entrega uma solução e o cliente decide o que fazer com ela. Troca por preço e qualidade.</p>
+            </div>
+            <div class="card">
+              <span class="tag">Nível 2</span>
+              <div class="ico">🔌</div>
+              <h3>Plataforma</h3>
+              <p>Você oferece a infraestrutura e terceiros constroem em cima. Valor capturado via taxas, API, rede.</p>
+            </div>
+            <div class="card hi">
+              <span class="tag">Nível 3</span>
+              <div class="ico">🌐</div>
+              <h3>Ecossistema</h3>
+              <p>Você conecta participantes que, sozinhos, não existiriam. Você orquestra dados, confiança e fluxo.</p>
+            </div>
+            <div class="card vio">
+              <span class="tag">Nível 4</span>
+              <div class="ico">🗺️</div>
+              <h3>Mercado</h3>
+              <p>Você ajuda a definir as regras e o padrão. O maior valor — e a maior exposição.</p>
+            </div>
+          </div>
+          <div class="grid g-21">
+            <div class="card">
+              <h3>Como uma empresa de produto vira protagonista de ecossistema</h3>
+              <ul class="list num">
+                <li><b>Convide</b> parceiros que hoje não são cliente — canal, logística, tecnologia</li>
+                <li><b>Conecte</b> ativos que só funcionam juntos: dados, distribuição e confiança</li>
+                <li><b>Monetize</b> a conexão, não só o seu lado — taxa, comissão, dados</li>
+                <li><b>Governar</b> a regra do jogo: regras claras aumentam a participação</li>
+              </ul>
+            </div>
+            <div class="card warn">
+              <h3>O aviso dos autores</h3>
+              <p>Ecossistema exige <b>parceria real</b> — aceitar que o valor se divide e que o parceiro também é cliente, competidor em outro canto e crítico em outro. Poucas organizações têm a maturidade para isso.</p>
+              <p>Comece por uma <b>adaptação leve</b>: um marketplace de serviços, um canal aberto, uma API pública. Não pule direto para a revolução industrial.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Se possível, cite um ecossistema do setor do público: app de transporte, marketplace de restaurantes, plataforma de pagamentos. Concretiza o conceito.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="cyan" data-title="Motor 2 em 8 passos" data-section="Parte 4 · Execução" data-label="Parte 4 · Execução" data-map="Framework em 8 passos" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 4 · Execução</p>
+        <h2 class="section-title reveal">Motor 2 em 8 passos</h2>
+        <p class="lead reveal">Um roteiro para sair da teoria e instalar a inovação na rotina da empresa.</p>
+        <div class="s-body reveal">
+          <div class="steps">
+            <div class="step"><span class="n" data-n="1"></span><h4>Propósito e ambição</h4><p>Onde a empresa quer estar em 5 anos — e o que precisa criar para chegar lá.</p></div>
+            <div class="step"><span class="n" data-n="2"></span><h4>Diagnóstico do Motor 1</h4><p>Mapeie o core, o caixa disponível e o que precisa estar blindado.</p></div>
+            <div class="step"><span class="n" data-n="3"></span><h4>Mapa de oportunidades</h4><p>Identifique adjacências, ecossistema e players em cada quadrante.</p></div>
+            <div class="step"><span class="n" data-n="4"></span><h4>Portfólio de iniciativas</h4><p>Selecione poucas apostas, priorize por impacto × viabilidade × timing.</p></div>
+            <div class="step"><span class="n" data-n="5"></span><h4>Arquitetura do Motor 2</h4><p>Célula ou jet ski: time, budget, mandato e autonomia definidos.</p></div>
+            <div class="step"><span class="n" data-n="6"></span><h4>Fracasso planejado</h4><p>Hipótese, teste, critério de avanço e data de decisão para cada iniciativa.</p></div>
+            <div class="step"><span class="n" data-n="7"></span><h4>Captura de valor</h4><p>Garantir que quem inova fica com o valor. Modelo de negócio desde o dia 1.</p></div>
+            <div class="step"><span class="n" data-n="8"></span><h4>Governança e métricas</h4><p>Ritmo de revisão, scorecard próprio e realocação de capital.</p></div>
+          </div>
+          <div class="callout">
+            <p>A ordem importa: sem diagnóstico (2) e sem arquitetura (5), os outros passos viram boas intenções.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Avise que os próximos dois slides detalham os 8 passos em fases. Convide a selecionar os 2 passos mais difíceis para a empresa de vocês.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="cyan" data-title="Os 8 passos em três fases" data-section="Parte 4 · Execução" data-label="Parte 4 · Execução" data-map="As três fases" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 4 · Execução</p>
+        <h2 class="section-title reveal">Os 8 passos em três fases</h2>
+        <div class="s-body reveal">
+          <div class="grid g3">
+            <div class="card warm">
+              <span class="tag">Fase 1 · Fundações</span>
+              <h3>Estratégia</h3>
+              <ul class="list num">
+                <li><b>1 · Propósito e ambição</b> — a pergunta de 5 anos, respondida em uma frase.</li>
+                <li><b>2 · Diagnóstico do Motor 1</b> — performance, riscos, caixa e o que não pode quebrar.</li>
+              </ul>
+              <p class="micro" style="margin-top:auto">Entregável: uma página com ambição + panorama do core.</p>
+            </div>
+            <div class="card hi">
+              <span class="tag">Fase 2 · Portfólio</span>
+              <h3>Escolhas</h3>
+              <ul class="list num">
+                <li><b>3 · Mapa de oportunidades</b> — adjacências e ecossistema mapeados.</li>
+                <li><b>4 · Portfólio de iniciativas</b> — 3 a 7 apostas, priorizadas e datadas.</li>
+              </ul>
+              <p class="micro" style="margin-top:auto">Entregável: um mapa de oportunidades + portfólio com score.</p>
+            </div>
+            <div class="card vio">
+              <span class="tag">Fase 3 · Operação</span>
+              <h3>Motor rodando</h3>
+              <ul class="list num">
+                <li><b>5 · Arquitetura</b> — célula ou jet ski com mandato e budget.</li>
+                <li><b>6 · Fracasso planejado</b> — testes, hipóteses, datas de decisão.</li>
+                <li><b>7 · Captura de valor</b> — modelo de negócio desde o início.</li>
+                <li><b>8 · Governança e métricas</b> — ritmo e scorecard próprios.</li>
+              </ul>
+              <p class="micro" style="margin-top:auto">Entregável: operação do Motor 2 rodando com ciclo mensal.</p>
+            </div>
+          </div>
+          <div class="grid g3">
+            <div class="stat m1">
+              <span class="n">30</span>
+              <span class="l">dias para concluir a Fase 1</span>
+            </div>
+            <div class="stat m2">
+              <span class="n">30</span>
+              <span class="l">dias para concluir a Fase 2</span>
+            </div>
+            <div class="stat vio">
+              <span class="n">contínuo</span>
+              <span class="l">Fase 3 — vira rotina permanente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>60 dias para ter portfólio priorizado é agressivo, mas factível se a direção se envolver. A Fase 3 não "termina" — é onde a inovação vira dia a dia, que é justamente o subtítulo do livro.</p></aside>
+    </section>
+
+    <section class="slide dense" data-tone="violet" data-title="Quem decide o quê" data-section="Parte 4 · Execução" data-label="Parte 4 · Execução" data-map="Governança" style="--card-accent:#aa91ff;--card-accent-rgb:170,145,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 4 · Execução</p>
+        <h2 class="section-title reveal">Quem decide o quê</h2>
+        <p class="lead reveal">Motor 2 sem governança clara vira projeto de um manager apaixonado. Com governança, vira sistema.</p>
+        <div class="s-body reveal">
+          <div class="cmp">
+            <div class="h"><div>Papel</div><div class="a">Motor 1</div><div class="b">Motor 2</div></div>
+            <div class="r"><div class="lbl">CEO / diretivo</div><div class="a">Aprova plano, budget e metas anuais</div><div class="b">Define a ambição de 5 anos e protege a carteira do Motor 2</div></div>
+            <div class="r"><div class="lbl">Time diretivo</div><div class="a">Prioriza BAU, corta custos, otimiza</div><div class="b">Prioriza portfólio de iniciativas, decide avançar ou abortar</div></div>
+            <div class="r"><div class="lbl">Líder da célula</div><div class="a">N/A — área de execução</div><div class="b">Autonomia de produto, tecnologia e parceria; responde por aprendizado</div></div>
+            <div class="r"><div class="lbl">Comitê</div><div class="a">Revisão de performance (mensal)</div><div class="b">Revisão de portfólio e experimentos (quinzenal)</div></div>
+            <div class="r"><div class="lbl">Recompensa</div><div class="a">Bônus por resultado do período</div><div class="b">Bônus por portfólio entregue, aprendizado e receita nova protegida</div></div>
+          </div>
+          <div class="grid g3">
+            <div class="card">
+              <h3>Regra de ouro</h3>
+              <p>Quem controla o <b>orçamento</b> do Motor 2 não pode ser o mesmo que aprova o corte de 15% no terceiro trimestre.</p>
+            </div>
+            <div class="card">
+              <h3>Ritmo</h3>
+              <p>Core: ciclos mensais ou trimestrais, com análise profunda. Motor 2: <b>ritmo semanal</b>, decisões em dias.</p>
+            </div>
+            <div class="card">
+              <h3>Comunicação</h3>
+              <p>Explicite para a empresa que o Motor 2 existe. Sem isso, ele é interpretado como "demissão disfarçada de inovação".</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Reforce a comunicação: em muitas empresas o lançamento da célula gera ruído interno ("quem foi escolhido para ir? quem ficou?"). Antecipe isso na comunicação da liderança.</p></aside>
+    </section>
+
+    <section class="slide dense" data-tone="cyan" data-title="Scorecard do Motor 2" data-section="Parte 4 · Execução" data-label="Parte 4 · Execução" data-map="Scorecard" style="--card-accent:#66e4ff;--card-accent-rgb:102,228,255;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 4 · Execução</p>
+        <h2 class="section-title reveal">Scorecard do Motor 2</h2>
+        <p class="lead reveal">Se você medir o Motor 2 com as métricas do Motor 1, ele sempre perde. Mude a régua.</p>
+        <div class="s-body reveal">
+          <div class="grid g4">
+            <div class="card hi">
+              <div class="ico">🧪</div>
+              <h3>Experimentos</h3>
+              <p>Nº de experimentos por trimestre · % com hipótese e critério de decisão · custo médio por experimento</p>
+            </div>
+            <div class="card hi">
+              <div class="ico">📚</div>
+              <h3>Aprendizado</h3>
+              <p>Aprendizados documentados e reutilizados · tempo médio de decisão, de aberto a decidido</p>
+            </div>
+            <div class="card hi">
+              <div class="ico">🚀</div>
+              <h3>Pipeline</h3>
+              <p>Iniciativas por estágio — hipótese, piloto, escala · % que avançam de estágio</p>
+            </div>
+            <div class="card hi">
+              <div class="ico">💵</div>
+              <h3>Receita nova</h3>
+              <p>Receita de linhas criadas nos últimos 24 meses · % do faturamento · novo fluxo de receita ativo</p>
+            </div>
+            <div class="card">
+              <div class="ico">🤝</div>
+              <h3>Ecossistema</h3>
+              <p>Parceiros ativos · receita via parceria · cobertura de canais</p>
+            </div>
+            <div class="card">
+              <div class="ico">👥</div>
+              <h3>Pessoas</h3>
+              <p>% de clientes atendidos por soluções inovadoras · % da força em projetos de Motor 2</p>
+            </div>
+            <div class="card">
+              <div class="ico">⚡</div>
+              <h3>Velocidade</h3>
+              <p>Tempo entre ideia e primeiro cliente · tempo entre piloto e escala</p>
+            </div>
+            <div class="card">
+              <div class="ico">🧭</div>
+              <h3>Portfólio</h3>
+              <p>Distribuição do investimento — base, adjacente, novo negócio — e retorno de cada linha</p>
+            </div>
+          </div>
+          <div class="callout good">
+            <p><b>Meta de equilíbrio:</b> a receita de linhas criadas há menos de 24 meses deve ser <b>material</b> — referência dos autores: meio dígito do faturamento. É isso que separa o Motor 2 que existe do que é só discurso.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Se a empresa ainda não tem nenhum dado de "receita nova", comece a contar a partir de hoje. Sem a linha de base, não há como provar progresso no conselho.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="ember" data-title="Plano de 90 dias" data-section="Parte 4 · Execução" data-label="Parte 4 · Execução" data-map="Plano de 90 dias" style="--card-accent:#ff8c61;--card-accent-rgb:255,140,97;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 4 · Execução</p>
+        <h2 class="section-title reveal">Plano de 90 dias para ligar o Motor 2</h2>
+        <div class="s-body reveal">
+          <div class="grid g3">
+            <div class="card warm">
+              <span class="tag">Dias 1–30</span>
+              <h3>Fundações</h3>
+              <ul class="list">
+                <li>Nomear um <b>responsável</b> pelo Motor 2 no comitê</li>
+                <li>Reservar <b>orçamento protegido</b> — mesmo que pequeno</li>
+                <li>Escrever a <b>ambição de 5 anos</b> em uma frase</li>
+                <li>Mapear o core: receitas, margens, riscos</li>
+                <li>Definir a métrica do Motor 2, começando simples</li>
+              </ul>
+            </div>
+            <div class="card hi">
+              <span class="tag">Dias 31–60</span>
+              <h3>Portfólio</h3>
+              <ul class="list">
+                <li>Mapear as <b>4 adjacências</b> com o time</li>
+                <li>Levantar 20–30 ideias de clientes, processos e canais</li>
+                <li>Priorizar por <b>impacto × viabilidade × timing</b></li>
+                <li>Escolher <b>3 a 5</b> iniciativas para o portfólio</li>
+                <li>Definir hipótese e critério de sucesso de cada uma</li>
+              </ul>
+            </div>
+            <div class="card vio">
+              <span class="tag">Dias 61–90</span>
+              <h3>Operação</h3>
+              <ul class="list">
+                <li>Montar a <b>célula / jet ski</b>: time, mandato, budget</li>
+                <li>Rodar o <b>primeiro experimento</b> com cliente real</li>
+                <li>Instituir o <b>ritmo quinzenal</b> de revisão de portfólio</li>
+                <li>Comunicar à organização o motivo e as regras</li>
+                <li>Avaliar se o modelo de captura de valor está certo</li>
+              </ul>
+            </div>
+          </div>
+          <div class="callout good">
+            <p><b>O ponto de partida mais simples:</b> não espere ter a estratégia perfeita. Escolha uma dor de cliente real e rode um experimento em 30 dias. O Motor 2 se prova fazendo.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Este é o slide de compromisso. Se for workshop, peça um nome e uma data de início para cada participante antes de avançar.</p></aside>
+    </section>
+
+    <section class="slide" data-tone="danger" data-title="Sete erros que matam o Motor 2" data-section="Parte 4 · Execução" data-label="Parte 4 · Execução" data-map="Sete erros" style="--card-accent:#ff5d59;--card-accent-rgb:255,93,89;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Parte 4 · Execução</p>
+        <h2 class="section-title reveal">Sete erros que matam o Motor 2</h2>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card"><h3>1 · Escolher o piloto errado</h3><p>Grande, lento e caro demais. O primeiro projeto do Motor 2 precisa ser rápido e barato.</p></div>
+            <div class="card"><h3>2 · Não separar o orçamento</h3><p>Se o core pode cortar, vai cortar — e o Motor 2 morre sem nunca ser julgado.</p></div>
+            <div class="card"><h3>3 · Colocar o Motor 2 abaixo do COO</h3><p>O Motor 2 é para o CEO, com apoio explícito do conselho. Não é um projeto de eficiência.</p></div>
+            <div class="card"><h3>4 · Excesso de reuniões</h3><p>Comitês, reuniões e relatórios demais matam a velocidade. O time de inovação precisa de contato direto com o cliente.</p></div>
+            <div class="card"><h3>5 · Deixar o experimentalismo virar caos</h3><p>Sem critério de decisão e sem data, o portfólio vira um conjunto de hobbies.</p></div>
+            <div class="card"><h3>6 · Ignorar a cultura</h3><p>Se a empresa pune erro, ninguém experimenta. Se premia obediência, ninguém tem ideia nova.</p></div>
+            <div class="card" style="grid-column:1 / -1"><h3>7 · Tratar inovação como campanha</h3><p>Semanas de inovação, hackathons e um site novo não mudam nada. A inovação só vira rotina quando existe <b>orçamento, time, métrica e reunião</b> marcadas na agenda — todo mês, para sempre.</p></div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Peça para a sala votar: qual destes erros já acontece na empresa? Em geral 2 ou 3 são admitidos em voz alta — o que gera discussão útil.</p></aside>
+    </section>
+
+    <section class="slide" data-title="Sete ideias para levar" data-section="Encerramento" data-label="Encerramento" data-map="Sete ideias" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Encerramento</p>
+        <h2 class="section-title reveal">Sete ideias para levar</h2>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card hi"><h3>1</h3><p>Motor 1 e Motor 2 são complementares, não alternativos. Sem eficiência não há aposta; sem aposta não há futuro.</p></div>
+            <div class="card hi"><h3>2</h3><p>O Motor 2 precisa de <b>arquitetura própria</b>: time, orçamento, métrica, ritmo e governança.</p></div>
+            <div class="card hi"><h3>3</h3><p>Inove para a <b>demanda do cliente</b>, não para a ideia da empresa. Venda antes de construir.</p></div>
+            <div class="card hi"><h3>4</h3><p>Fracasso é método, não evento: planeje, teste barato, decida rápido, registre.</p></div>
+            <div class="card hi"><h3>5</h3><p>Não espere o disruptor. Canibalize-se, plataforme o concorrente, cobre a adjacência.</p></div>
+            <div class="card hi"><h3>6</h3><p>A inovação que você cria precisa de <b>modelo de captura de valor</b> desde o dia 1. A Xerox não capturou valor da própria invenção.</p></div>
+            <div class="card hi" style="grid-column:1 / -1"><h3>7</h3><p>Inovação é <b>rotina, não evento</b>. É o que o subtítulo do livro promete: tornar a inovação parte do dia a dia. Agenda, budget e métrica — todo mês, para sempre.</p></div>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Use como fechamento. Se der tempo, peça para cada pessoa escolher a ideia que mais aplica na empresa neste ano e escrever o primeiro passo.</p></aside>
+    </section>
+
+    <section class="slide" data-title="Empresas não morrem de falta de eficiência" data-section="Encerramento" data-label="Encerramento" data-map="A frase final" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Encerramento</p>
+        <blockquote class="quote reveal">Empresas não morrem de falta de eficiência.<br>Elas morrem de falta de futuro.<span>A Estratégia do Motor 2</span></blockquote>
+        <div class="s-body reveal">
+          <div class="pills">
+            <span class="pill m1">Motor 2 ou morte</span>
+            <span class="pill">Sandro Magaldi &amp; José Salibi Neto</span>
+            <span class="pill">Editora Gente · 2024</span>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Slide de pausa. Deixe em silêncio por 3 segundos antes de avançar para a pergunta final.</p></aside>
+    </section>
+
+    <section class="slide" data-title="Uma pergunta para a sua empresa" data-section="Encerramento" data-label="Encerramento" data-map="Fechamento" style="--card-accent:#c8ff4d;--card-accent-rgb:200,255,77;">
+      <div class="slide-inner">
+        <p class="eyebrow reveal">Encerramento</p>
+        <h2 class="section-title reveal">Uma pergunta para a sua <em>sua empresa</em></h2>
+        <div class="s-body reveal">
+          <div class="grid g2">
+            <div class="card hi">
+              <h3>Se a sua categoria fosse disrupta amanhã…</h3>
+              <p>quem seria? O que eles fariam de diferente? Em quanto tempo?</p>
+              <p>Agora a pergunta do Motor 2: <b>qual é a aposta que faremos nos próximos 90 dias para que essa resposta seja a gente?</b></p>
+            </div>
+            <div class="stack">
+              <div class="card">
+                <h3>Próximos passos</h3>
+                <ul class="list num">
+                  <li>Escolher um responsável pelo Motor 2</li>
+                  <li>Reservar um orçamento protegido, mesmo que pequeno</li>
+                  <li>Mapear as 4 adjacências</li>
+                  <li>Selecionar 3–5 iniciativas</li>
+                  <li>Rodar o primeiro experimento em 30 dias</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3>Leitura e referência</h3>
+                <p><b>A Estratégia do Motor 2</b> — Sandro Magaldi e José Salibi Neto, Editora Gente, 2024. Continuação de <i>Gestão do Amanhã</i>, com mais de 650 mil exemplares vendidos.</p>
+              </div>
+            </div>
+          </div>
+          <div class="callout">
+            <p>Esta apresentação é um resumo comentado da obra — consulte o livro original para os exemplos completos, ferramentas e detalhes de cada capítulo.</p>
+          </div>
+        </div>
+      </div>
+      <aside class="notes"><p>Encerre pedindo o compromisso em voz alta: nome + primeira aposta + data. A mudança de comportamento acontece quando alguém se compromete publicamente.</p></aside>
+    </section>
+
+  </main>
+
+  <div class="dot-rail" id="dotRail" role="group" aria-label="Navegação rápida entre slides"></div>
+
+  <footer class="footer-nav">
+    <button class="nav-button" id="prevButton" type="button" aria-label="Slide anterior">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+      <span>Anterior</span>
+    </button>
+    <div class="slide-counter" aria-live="polite"><strong id="currentNumber">01</strong><span class="counter-separator">/</span><span id="totalNumber">30</span></div>
+    <button class="nav-button" id="nextButton" type="button" aria-label="Próximo slide">
+      <span>Próximo</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+    </button>
+  </footer>
+
+  <aside class="notes-panel" id="notesPanel" aria-live="polite">
+    <div class="notes-head">
+      <h5>Notas do apresentador</h5>
+      <h5 id="notesSlide">01</h5>
+    </div>
+    <div class="notes-body" id="notesBody"></div>
+  </aside>
+
+  <dialog class="dialog" id="mapDialog" aria-labelledby="mapTitle">
+    <div class="dialog-header">
+      <div><h2 id="mapTitle">Mapa da apresentação</h2><p>Escolha qualquer capítulo para navegar.</p></div>
+      <button class="close-button" id="closeMapButton" type="button" aria-label="Fechar mapa">×</button>
+    </div>
+    <div class="map-grid" id="mapGrid"></div>
+    <div class="dialog-footer">
+      <div class="shortcuts"><span><kbd>←</kbd><kbd>→</kbd> navegar</span><span><kbd>M</kbd> mapa</span><span><kbd>N</kbd> notas</span><span><kbd>F</kbd> tela cheia</span><span><kbd>P</kbd> imprimir</span><span><kbd>Esc</kbd> fechar</span></div>
+      <p class="source"><strong>A Estratégia do Motor 2</strong> · Sandro Magaldi e José Salibi Neto · Editora Gente, 2024</p>
+    </div>
+  </dialog>
+
+  <div class="help" id="help" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <div class="box">
+      <h4 id="helpTitle">Atalhos</h4>
+      <dl>
+        <dt><kbd>→</kbd> <kbd>↓</kbd> <kbd>Espaço</kbd> <kbd>PgDn</kbd></dt><dd>Próximo slide</dd>
+        <dt><kbd>←</kbd> <kbd>↑</kbd> <kbd>PgUp</kbd></dt><dd>Slide anterior</dd>
+        <dt><kbd>Home</kbd> / <kbd>End</kbd></dt><dd>Primeiro / último slide</dd>
+        <dt><kbd>1</kbd> … <kbd>9</kbd> <kbd>0</kbd></dt><dd>Ir direto ao slide (1–30)</dd>
+        <dt><kbd>M</kbd></dt><dd>Mapa da apresentação</dd>
+        <dt><kbd>N</kbd></dt><dd>Notas do apresentador</dd>
+        <dt><kbd>F</kbd></dt><dd>Tela cheia</dd>
+        <dt><kbd>P</kbd></dt><dd>Imprimir / salvar em PDF</dd>
+        <dt><kbd>?</kbd> / <kbd>H</kbd></dt><dd>Esta ajuda</dd>
+        <dt><kbd>Esc</kbd></dt><dd>Fechar overlays</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    (() => {
+      const deck = document.getElementById('deck');
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const total = slides.length;
+      const progressBar = document.getElementById('progressBar');
+      const currentNumber = document.getElementById('currentNumber');
+      const totalNumber = document.getElementById('totalNumber');
+      const sectionLabel = document.getElementById('sectionLabel');
+      const prevButton = document.getElementById('prevButton');
+      const nextButton = document.getElementById('nextButton');
+      const dotRail = document.getElementById('dotRail');
+      const mapDialog = document.getElementById('mapDialog');
+      const mapGrid = document.getElementById('mapGrid');
+      const notesButton = document.getElementById('notesButton');
+      const notesPanel = document.getElementById('notesPanel');
+      const notesBody = document.getElementById('notesBody');
+      const notesSlide = document.getElementById('notesSlide');
+      const fullscreenButton = document.getElementById('fullscreenButton');
+      const help = document.getElementById('help');
+      const toast = document.getElementById('toast');
+      let current = 0;
+      let wheelLocked = false;
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let toastTimer;
+
+      const pad = value => String(value).padStart(2, '0');
+      const clamp = value => Math.max(0, Math.min(total - 1, value));
+
+      const mapButtons = slides.map((slide, index) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'map-card';
+        button.dataset.mapIndex = index;
+        button.style.setProperty('--card-accent', slide.style.getPropertyValue('--card-accent') || '#c8ff4d');
+        button.style.setProperty('--card-accent-rgb', slide.style.getPropertyValue('--card-accent-rgb') || '200, 255, 77');
+        button.innerHTML = `<small>${pad(index + 1)}</small><strong>${slide.dataset.map}</strong>`;
+        mapGrid.appendChild(button);
+
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'dot-button';
+        dot.dataset.goto = index;
+        dot.setAttribute('aria-label', `Ir para ${slide.dataset.title}`);
+        dotRail.appendChild(dot);
+        return button;
+      });
+
+      const showNotes = index => {
+        const source = slides[index].querySelector('.notes');
+        notesBody.innerHTML = source ? source.innerHTML : '<p>Sem notas para este slide.</p>';
+        notesSlide.textContent = pad(index + 1);
+        notesPanel.scrollTop = 0;
+      };
+
+      const showSlide = (requestedIndex, updateHash = true) => {
+        const next = clamp(requestedIndex);
+        current = next;
+
+        slides.forEach((slide, index) => {
+          const active = index === current;
+          slide.classList.toggle('is-active', active);
+          slide.setAttribute('aria-hidden', String(!active));
+          slide.inert = !active;
+        });
+
+        const activeStyle = getComputedStyle(slides[current]);
+        document.documentElement.style.setProperty('--current-accent', activeStyle.getPropertyValue('--slide-accent').trim());
+        document.documentElement.style.setProperty('--current-accent-rgb', activeStyle.getPropertyValue('--slide-accent-rgb').trim());
+
+        progressBar.style.transform = `scaleX(${(current + 1) / total})`;
+        currentNumber.textContent = pad(current + 1);
+        totalNumber.textContent = pad(total);
+        sectionLabel.textContent = slides[current].dataset.label;
+        prevButton.disabled = current === 0;
+        nextButton.disabled = current === total - 1;
+        document.title = `${slides[current].dataset.title} · A Estratégia do Motor 2`;
+
+        dotRail.querySelectorAll('.dot-button').forEach((dot, index) => {
+          dot.setAttribute('aria-current', String(index === current));
+        });
+
+        mapButtons.forEach((button, index) => {
+          button.setAttribute('aria-current', String(index === current));
+        });
+
+        showNotes(current);
+        slides[current].scrollTop = 0;
+
+        if (updateHash) history.replaceState(null, '', `#${current + 1}`);
+      };
+
+      const nextSlide = () => showSlide(current + 1);
+      const previousSlide = () => showSlide(current - 1);
+
+      const toggleNotes = () => {
+        const on = document.body.classList.toggle('notes-on');
+        notesButton.setAttribute('aria-pressed', String(on));
+        notesButton.setAttribute('aria-label', on ? 'Ocultar notas do apresentador' : 'Mostrar notas do apresentador');
+      };
+
+      const showToast = message => {
+        clearTimeout(toastTimer);
+        toast.textContent = message;
+        toast.classList.add('is-visible');
+        toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 1900);
+      };
+
+      const openMap = () => {
+        if (!mapDialog.open) mapDialog.showModal();
+      };
+
+      const toggleFullscreen = async () => {
+        try {
+          if (!document.fullscreenElement) {
+            await document.documentElement.requestFullscreen();
+            fullscreenButton.setAttribute('aria-label', 'Sair da tela cheia');
+          } else {
+            await document.exitFullscreen();
+            fullscreenButton.setAttribute('aria-label', 'Entrar em tela cheia');
+          }
+        } catch {
+          showToast('Tela cheia não disponível neste navegador.');
+        }
+      };
+
+      prevButton.addEventListener('click', previousSlide);
+      nextButton.addEventListener('click', nextSlide);
+      document.getElementById('mapButton').addEventListener('click', openMap);
+      document.getElementById('closeMapButton').addEventListener('click', () => mapDialog.close());
+      notesButton.addEventListener('click', toggleNotes);
+      fullscreenButton.addEventListener('click', toggleFullscreen);
+
+      mapDialog.addEventListener('click', event => {
+        if (event.target === mapDialog) mapDialog.close();
+      });
+
+      help.addEventListener('click', () => help.classList.remove('show'));
+
+      document.addEventListener('click', event => {
+        const target = event.target.closest('[data-goto]');
+        if (target) showSlide(Number(target.dataset.goto));
+      });
+
+      document.addEventListener('keydown', event => {
+        if (event.altKey || event.ctrlKey || event.metaKey) return;
+        const activeTag = document.activeElement?.tagName;
+        if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+        if (mapDialog.open && !['m', 'M', 'Escape', 'n', 'N'].includes(event.key)) return;
+        if (help.classList.contains('show') && !['?', 'h', 'H', 'Escape'].includes(event.key)) return;
+
+        const key = event.key;
+
+        if (key === 'Escape') {
+          help.classList.remove('show');
+          if (mapDialog.open) mapDialog.close();
+          return;
+        }
+
+        if (key === 'ArrowRight' || key === 'ArrowDown' || key === 'PageDown') {
+          event.preventDefault();
+          nextSlide();
+        } else if (key === 'ArrowLeft' || key === 'ArrowUp' || key === 'PageUp') {
+          event.preventDefault();
+          previousSlide();
+        } else if (key === 'Home') {
+          event.preventDefault();
+          showSlide(0);
+        } else if (key === 'End') {
+          event.preventDefault();
+          showSlide(total - 1);
+        } else if (key === ' ' && activeTag !== 'BUTTON') {
+          event.preventDefault();
+          nextSlide();
+        } else if (key.toLowerCase() === 'm') {
+          event.preventDefault();
+          mapDialog.open ? mapDialog.close() : openMap();
+        } else if (key.toLowerCase() === 'n') {
+          event.preventDefault();
+          toggleNotes();
+        } else if (key.toLowerCase() === 'f') {
+          event.preventDefault();
+          toggleFullscreen();
+        } else if (key.toLowerCase() === 'p') {
+          event.preventDefault();
+          window.print();
+        } else if (key === '?' || key.toLowerCase() === 'h') {
+          event.preventDefault();
+          help.classList.toggle('show');
+        } else if (/^[0-9]$/.test(key)) {
+          event.preventDefault();
+          const digit = key === '0' ? 10 : Number(key);
+          showSlide(digit - 1);
+        }
+      });
+
+      deck.addEventListener('wheel', event => {
+        if (mapDialog.open || wheelLocked || Math.abs(event.deltaY) < 24) return;
+        const slide = slides[current];
+        const scrollable = slide.scrollHeight - slide.clientHeight > 4;
+        if (scrollable) {
+          const atTop = slide.scrollTop <= 0;
+          const atBottom = slide.scrollTop + slide.clientHeight >= slide.scrollHeight - 2;
+          if (!((event.deltaY > 0 && atBottom) || (event.deltaY < 0 && atTop))) return;
+        }
+        wheelLocked = true;
+        if (event.deltaY > 0) nextSlide();
+        else previousSlide();
+        setTimeout(() => { wheelLocked = false; }, 620);
+      }, { passive: true });
+
+      deck.addEventListener('touchstart', event => {
+        touchStartX = event.changedTouches[0].clientX;
+        touchStartY = event.changedTouches[0].clientY;
+      }, { passive: true });
+
+      deck.addEventListener('touchend', event => {
+        const deltaX = event.changedTouches[0].clientX - touchStartX;
+        const deltaY = event.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(deltaX) > 55 && Math.abs(deltaX) > Math.abs(deltaY)) {
+          deltaX < 0 ? nextSlide() : previousSlide();
+        }
+      }, { passive: true });
+
+      mapGrid.addEventListener('click', event => {
+        const button = event.target.closest('[data-map-index]');
+        if (!button) return;
+        showSlide(Number(button.dataset.mapIndex));
+        mapDialog.close();
+      });
+
+      document.addEventListener('fullscreenchange', () => {
+        fullscreenButton.setAttribute('aria-label', document.fullscreenElement ? 'Sair da tela cheia' : 'Entrar em tela cheia');
+      });
+
+      window.addEventListener('hashchange', () => {
+        const requested = Number.parseInt(location.hash.replace('#', ''), 10);
+        if (Number.isInteger(requested) && requested - 1 !== current) showSlide(requested - 1, false);
+      });
+
+      const hashIndex = Number.parseInt(location.hash.replace('#', ''), 10);
+      showSlide(Number.isInteger(hashIndex) ? hashIndex - 1 : 0, false);
+    })();
+  </script>
+</body>
+</html>
