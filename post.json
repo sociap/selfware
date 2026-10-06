@@ -1,5 +1,13 @@
 [
   {
+    "tag": "Tendências de IA",
+    "title": "Tendências de IA para empresas em 2026",
+    "subtitle": "Agentes, modelos especializados, multimodalidade e governança: os movimentos que estão levando a IA para dentro da operação.",
+    "href": "post/tendencias-ia-empresas-2026.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre tendências de inteligência artificial nas empresas"
+  },
+  {
     "tag": "IA aplicada ao B2B",
     "title": "Quanto custa implementar IA em uma empresa?",
     "subtitle": "Entenda os componentes do investimento e como estimar escopo, operação e retorno antes de começar.",
