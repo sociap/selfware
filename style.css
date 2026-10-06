@@ -858,6 +858,102 @@ footer p {
     color: var(--text-muted);
 }
 
+
+/* Referências do post */
+.sources-section {
+    margin-top: 1rem;
+}
+
+.sources-heading {
+    margin-bottom: 1.5rem;
+}
+
+.sources-heading .post-tag {
+    margin-bottom: 0.5rem;
+    color: var(--accent-color);
+}
+
+.sources-heading h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.6rem;
+}
+
+.sources-heading > p:last-child {
+    color: var(--text-muted);
+}
+
+.sources-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid var(--glass-border);
+}
+
+.sources-list li {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.source-number {
+    color: var(--accent-color);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.source-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.source-copy {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.source-copy strong {
+    font-size: 1rem;
+}
+
+.source-copy > span {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.source-action {
+    color: var(--accent-color);
+    font-size: 1.25rem;
+    transition: transform 0.2s;
+}
+
+.source-link:hover .source-action {
+    transform: translate(3px, -3px);
+}
+
+.source-link:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 5px;
+    border-radius: 4px;
+}
+
+@media (max-width: 600px) {
+    .sources-list li {
+        grid-template-columns: 2rem 1fr;
+        gap: 0.6rem;
+    }
+
+    .source-copy > span {
+        font-size: 0.82rem;
+    }
+}
 .see-also {
     margin-top: 3rem;
     padding-top: 2rem;
