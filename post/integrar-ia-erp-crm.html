@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selfware | Como integrar IA ao ERP e ao CRM</title>
+    <meta name="description"
+        content="Veja como integrar inteligência artificial ao ERP e ao CRM com casos de uso, etapas de implementação, controles e métricas de sucesso.">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+    <script src="/header.js"></script>
+</head>
+
+<body class="dark-theme">
+
+    <header-main></header-main>
+
+    <header class="hero2">
+        <div class="hero2-glow"></div>
+        <div class="container">
+            <h1 class="fade-in">Como integrar IA ao <span>ERP e ao CRM</span></h1>
+            <p class="fade-in-delayed">Leve a inteligência artificial para os fluxos que sua equipe já usa, com dados confiáveis, ações controladas e resultado mensurável.</p>
+            <div class="hero2-actions fade-in-delayed">
+                <a href="/#contact" class="btn btn-primary">Falar com a Selfware</a>
+                <a href="/post.html" class="btn btn-outline">Ver todos os posts</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="section bg-alt">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">IA aplicada ao B2B</p>
+                    <h2 class="section-title">IA útil começa no fluxo de trabalho, não no chatbot</h2>
+                    <p class="post-subtitle">ERP e CRM concentram informações importantes da operação. Integrá-los à IA pode reduzir tarefas manuais e apoiar decisões sem criar mais um sistema isolado.</p>
+                </div>
+                <article class="post-card glass">
+                    <div class="post-meta">
+                        <span>Leitura de 7 min</span>
+                        <span>•</span>
+                        <span>Atualizado em 2026</span>
+                    </div>
+                    <p>Uma integração com IA não precisa substituir seu ERP ou CRM. O objetivo é permitir que a IA consulte o contexto necessário e ajude a executar etapas de um processo que já existe.</p>
+                    <p>Por exemplo, uma pessoa de vendas pode pedir um resumo da conta antes de uma reunião. A IA reúne interações recentes do CRM, pedidos registrados no ERP e documentos permitidos, apresenta as fontes e sugere próximos passos.</p>
+                    <ul class="post-list">
+                        <li><strong>CRM:</strong> resumir histórico de clientes, preparar follow-ups e identificar oportunidades sem atividade recente.</li>
+                        <li><strong>ERP:</strong> explicar variações em pedidos ou estoque e reunir informações para análise operacional.</li>
+                        <li><strong>Entre sistemas:</strong> localizar divergências, preparar registros e encaminhar exceções para a equipe responsável.</li>
+                    </ul>
+                    <p class="post-footer">O melhor caso de uso remove atrito de um processo real e deixa claro quem responde pela decisão final.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section bg-alt-dark">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">Modelos de integração</p>
+                    <h2 class="section-title">Escolha o nível de autonomia adequado</h2>
+                    <p class="post-subtitle">A integração pode começar com consulta e avançar para ações conforme a qualidade e o risco do processo permitirem.</p>
+                </div>
+                <article class="post-card glass">
+                    <ol class="post-list">
+                        <li><strong>Consulta e resumo:</strong> a IA lê dados autorizados e apresenta contexto, sem alterar registros.</li>
+                        <li><strong>Recomendação:</strong> além de consultar, sugere uma ação para uma pessoa revisar.</li>
+                        <li><strong>Ação com aprovação:</strong> prepara uma atualização, mensagem ou tarefa e solicita confirmação antes de gravar.</li>
+                        <li><strong>Automação delimitada:</strong> executa ações repetitivas de baixo risco, com regras, limites e registro do que ocorreu.</li>
+                    </ol>
+                    <p>Comece no nível mais simples que gere valor. A autonomia deve crescer com evidências de qualidade, reversibilidade e capacidade de monitoramento.</p>
+                    <p class="post-footer">Aprovação humana é especialmente útil quando uma ação afeta clientes, valores, contratos ou dados importantes.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section bg-alt">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">Preparação técnica</p>
+                    <h2 class="section-title">O que definir antes de conectar os sistemas</h2>
+                    <p class="post-subtitle">Uma boa integração depende de dados acessíveis, permissões claras e operações que possam ser acompanhadas.</p>
+                </div>
+                <article class="post-card glass">
+                    <ul class="post-list">
+                        <li><strong>Fonte de verdade:</strong> defina qual sistema prevalece quando informações divergirem.</li>
+                        <li><strong>Identidade e acesso:</strong> limite cada consulta e ação ao usuário, agente e finalidade autorizados.</li>
+                        <li><strong>APIs e contratos:</strong> use interfaces documentadas e valide formatos, campos obrigatórios e limites de uso.</li>
+                        <li><strong>Qualidade e contexto:</strong> padronize identificadores e forneça apenas os dados necessários para cada tarefa.</li>
+                        <li><strong>Auditoria e recuperação:</strong> registre consultas e alterações, trate falhas e defina como corrigir ou desfazer ações.</li>
+                    </ul>
+                    <p>Evite permitir que o modelo acesse diretamente o banco de produção. Uma camada de serviços pode aplicar permissões, validar entradas e controlar as operações disponíveis.</p>
+                    <p class="post-footer">Integração segura trata cada ação da IA como uma operação de software: autorizada, validada e observável.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section bg-alt-dark">
+            <div class="container narrow">
+                <div class="post-header center">
+                    <p class="post-tag">Roteiro de implementação</p>
+                    <h2 class="section-title">Como começar sem criar um projeto interminável</h2>
+                    <p class="post-subtitle">Um piloto pequeno ajuda a validar dados, experiência e retorno antes de ampliar a integração.</p>
+                </div>
+                <article class="post-card glass">
+                    <ol class="post-list">
+                        <li><strong>Escolha um fluxo específico:</strong> procure uma tarefa frequente, com entradas conhecidas e resultado verificável.</li>
+                        <li><strong>Mapeie sistemas e responsáveis:</strong> identifique dados necessários, permissões, exceções e dono do processo.</li>
+                        <li><strong>Defina uma linha de base:</strong> registre tempo, volume, erros e custo antes da mudança.</li>
+                        <li><strong>Teste primeiro em modo assistido:</strong> compare sugestões com decisões da equipe e ajuste regras e contexto.</li>
+                        <li><strong>Amplie com critérios:</strong> monitore qualidade, adoção, falhas e impacto antes de liberar ações automáticas.</li>
+                    </ol>
+                    <p>Meça o resultado no processo: tempo economizado, registros mais completos, redução de retrabalho ou velocidade de resposta. A qualidade das respostas da IA, isoladamente, não comprova impacto no negócio.</p>
+                    <p class="post-footer">Uma integração bem-sucedida conecta a IA a uma melhoria operacional que a equipe consegue perceber e medir.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container center">
+                <h2 class="impact-phrase">
+                    “A IA gera valor quando entra no fluxo de trabalho com <span>contexto, acesso controlado e resultado mensurável</span>.”
+                </h2>
+            </div>
+        </section>
+
+        <section class="section bg-alt-dark">
+            <div class="container narrow">
+                <div class="see-also">
+                    <h2>Veja também</h2>
+                    <div class="see-also-grid">
+                        <a href="/post/o-que-da-para-automatizar-com-ia-em-uma-empresa-b2b.html" class="see-also-card glass">
+                            <p class="post-tag">IA aplicada ao B2B</p>
+                            <h3>O que dá para automatizar com IA?</h3>
+                            <p>Encontre processos com volume, repetição e impacto que podem se beneficiar da automação.</p>
+                        </a>
+                        <a href="/post/arquitetura-software-escalavel.html" class="see-also-card glass">
+                            <p class="post-tag">Arquitetura &amp; Crescimento</p>
+                            <h3>Arquitetura de software escalável</h3>
+                            <p>Princípios para preparar sistemas para crescer com segurança e previsibilidade.</p>
+                        </a>
+                        <a href="/post/ia-first-o-que-e.html" class="see-also-card glass">
+                            <p class="post-tag">IA aplicada ao B2B</p>
+                            <h3>O que é IA-First?</h3>
+                            <p>Repense o produto a partir do que a inteligência artificial pode fazer.</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer-main></footer-main>
+    <script src="/main.js"></script>
+</body>
+
+</html>

@@ -1,6 +1,22 @@
 [
   {
     "tag": "IA aplicada ao B2B",
+    "title": "Como integrar IA ao ERP e ao CRM",
+    "subtitle": "Casos de uso, etapas e controles para conectar inteligência artificial aos sistemas que sua equipe já usa.",
+    "href": "post/integrar-ia-erp-crm.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre integração de inteligência artificial com ERP e CRM"
+  },
+  {
+    "tag": "Guia Estratégico",
+    "title": "Desenvolver uma solução de IA ou contratar uma pronta?",
+    "subtitle": "Compare custo, prazo, integração e controle para escolher a abordagem certa para sua empresa.",
+    "href": "post/solucao-ia-propria-ou-pronta.html",
+    "image": "media/post-architecture.svg",
+    "imageAlt": "Ilustração sobre a decisão entre desenvolver ou contratar uma solução de IA"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
     "title": "O que é IA-First?",
     "subtitle": "Entenda como construir produtos a partir do que a IA pode fazer — muito além de adicionar um chatbot.",
     "href": "post/ia-first-o-que-e.html",
