@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Selfware Agents</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg: #f6f7f9;
+        --surface: #ffffff;
+        --surface-2: #f0f2f5;
+        --border: #e1e4e8;
+        --text: #17191c;
+        --muted: #6b7280;
+        --accent: #111827;
+        --accent-hover: #2b3340;
+        --success: #16834b;
+        --danger: #c0392b;
+        --radius: 14px;
+    }
+
+    body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family:
+            Inter,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Arial,
+            sans-serif;
+    }
+
+    button,
+    input {
+        font: inherit;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    .app {
+        min-height: 100vh;
+    }
+
+    /* HEADER */
+
+    header {
+        height: 68px;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        padding: 0 34px;
+
+        position: sticky;
+        top: 0;
+        z-index: 20;
+    }
+
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: -0.3px;
+    }
+
+    .brand-mark {
+        width: 34px;
+        height: 34px;
+        background: var(--accent);
+        color: white;
+        border-radius: 9px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    nav button {
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+
+        padding: 9px 13px;
+        border-radius: 8px;
+    }
+
+    nav button:hover,
+    nav button.active {
+        background: var(--surface-2);
+        color: var(--text);
+    }
+
+    /* MAIN */
+
+    main {
+        max-width: 1180px;
+        margin: auto;
+        padding: 48px 28px 80px;
+    }
+
+    .hero {
+        margin-bottom: 34px;
+    }
+
+    .hero h1 {
+        margin: 0 0 8px;
+        font-size: 36px;
+        letter-spacing: -1.2px;
+    }
+
+    .hero p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+    }
+
+    /* SEARCH */
+
+    .toolbar {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 26px;
+    }
+
+    .search {
+        position: relative;
+        flex: 1;
+    }
+
+    .search input {
+        width: 100%;
+        height: 46px;
+
+        border: 1px solid var(--border);
+        border-radius: 10px;
+
+        background: var(--surface);
+
+        padding: 0 16px 0 42px;
+        outline: none;
+
+        transition: border .15s;
+    }
+
+    .search input:focus {
+        border-color: #aab0b8;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        top: 13px;
+        color: var(--muted);
+    }
+
+    select {
+        height: 46px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        padding: 0 13px;
+        color: var(--text);
+        outline: none;
+    }
+
+    /* GRID */
+
+    .agents-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .agent-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        padding: 22px;
+
+        transition:
+            transform .15s,
+            box-shadow .15s,
+            border-color .15s;
+    }
+
+    .agent-card:hover {
+        transform: translateY(-2px);
+        border-color: #cbd0d6;
+        box-shadow: 0 8px 24px rgba(0,0,0,.05);
+    }
+
+    .agent-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .agent-icon {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 11px;
+        background: var(--surface-2);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 21px;
+    }
+
+    .agent-card h2 {
+        margin: 0 0 5px;
+        font-size: 18px;
+        letter-spacing: -.3px;
+    }
+
+    .agent-description {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .version {
+        color: var(--muted);
+        font-size: 12px;
+        white-space: nowrap;
+    }
+
+    .skills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 19px 0;
+    }
+
+    .skill {
+        padding: 5px 9px;
+        background: var(--surface-2);
+        border-radius: 6px;
+
+        font-size: 12px;
+        color: #4b5563;
+    }
+
+    .card-footer {
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .button {
+        border: 1px solid var(--border);
+        background: var(--surface);
+
+        color: var(--text);
+
+        border-radius: 8px;
+        padding: 9px 13px;
+
+        font-size: 13px;
+    }
+
+    .button:hover {
+        background: var(--surface-2);
+    }
+
+    .button.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+
+    .button.primary:hover {
+        background: var(--accent-hover);
+    }
+
+    .button.success {
+        color: var(--success);
+        border-color: #b9dfca;
+        background: #f4fbf7;
+    }
+
+    /* DETAILS */
+
+    .details {
+        display: none;
+    }
+
+    .details.visible {
+        display: block;
+    }
+
+    .back {
+        border: 0;
+        background: transparent;
+        padding: 0;
+        color: var(--muted);
+        margin-bottom: 28px;
+    }
+
+    .back:hover {
+        color: var(--text);
+    }
+
+    .details-header {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        padding: 30px;
+        margin-bottom: 16px;
+    }
+
+    .details-title {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+    }
+
+    .details-title h1 {
+        margin: 0 0 8px;
+        font-size: 28px;
+    }
+
+    .details-title p {
+        margin: 0;
+        color: var(--muted);
+    }
+
+    .details-section {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        padding: 24px;
+        margin-bottom: 16px;
+    }
+
+    .details-section h3 {
+        margin: 0 0 17px;
+        font-size: 15px;
+    }
+
+    .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .meta {
+        padding: 14px;
+        background: var(--surface-2);
+        border-radius: 9px;
+    }
+
+    .meta label {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        margin-bottom: 5px;
+    }
+
+    .meta strong {
+        font-size: 14px;
+    }
+
+    .file-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .file-list li {
+        padding: 11px 0;
+        border-bottom: 1px solid var(--border);
+        font-size: 13px;
+    }
+
+    .file-list li:last-child {
+        border-bottom: 0;
+    }
+
+    /* INSTALLED */
+
+    .installed {
+        display: none;
+    }
+
+    .installed.visible {
+        display: block;
+    }
+
+    .installed-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .installed-item {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+
+        padding: 18px;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .installed-info {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .status {
+        font-size: 12px;
+        color: var(--success);
+        margin-top: 4px;
+    }
+
+    /* EMPTY */
+
+    .empty {
+        padding: 60px 20px;
+        text-align: center;
+        color: var(--muted);
+        background: var(--surface);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+    }
+
+    /* MODAL */
+
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+
+        background: rgba(0,0,0,.35);
+
+        display: none;
+        align-items: center;
+        justify-content: center;
+
+        z-index: 100;
+        padding: 20px;
+    }
+
+    .modal-backdrop.visible {
+        display: flex;
+    }
+
+    .modal {
+        width: 100%;
+        max-width: 440px;
+
+        background: var(--surface);
+        border-radius: 16px;
+        border: 1px solid var(--border);
+
+        padding: 28px;
+
+        box-shadow: 0 20px 60px rgba(0,0,0,.15);
+    }
+
+    .modal h2 {
+        margin: 0 0 8px;
+    }
+
+    .modal p {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .progress {
+        height: 7px;
+        background: var(--surface-2);
+        border-radius: 10px;
+        overflow: hidden;
+        margin: 22px 0 10px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0;
+        background: var(--accent);
+        transition: width .2s;
+    }
+
+    .progress-text {
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 24px;
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 760px) {
+
+        header {
+            padding: 0 18px;
+        }
+
+        nav button {
+            padding: 8px;
+        }
+
+        nav button span {
+            display: none;
+        }
+
+        main {
+            padding: 32px 16px 60px;
+        }
+
+        .hero h1 {
+            font-size: 30px;
+        }
+
+        .toolbar {
+            flex-direction: column;
+        }
+
+        .agents-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .meta-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .installed-item {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header>
+
+    <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>Selfware Agents</div>
+    </div>
+
+    <nav>
+        <button id="navExplore" class="active" onclick="showExplore()">
+            <span>Explorar</span>
+        </button>
+
+        <button id="navInstalled" onclick="showInstalled()">
+            <span>Instalados</span>
+        </button>
+    </nav>
+
+</header>
+
+
+<main>
+
+    <!-- EXPLORAR -->
+
+    <section id="exploreView">
+
+        <div class="hero">
+            <h1>Agent Registry</h1>
+            <p>Agentes prontos para instalar e utilizar nos seus projetos.</p>
+        </div>
+
+        <div class="toolbar">
+
+            <div class="search">
+
+                <span class="search-icon">⌕</span>
+
+                <input
+                    id="searchInput"
+                    type="search"
+                    placeholder="Pesquisar agentes..."
+                    oninput="renderAgents()"
+                >
+
+            </div>
+
+            <select id="categoryFilter" onchange="renderAgents()">
+
+                <option value="">Todas as categorias</option>
+                <option value="development">Desenvolvimento</option>
+                <option value="marketing">Marketing</option>
+                <option value="research">Pesquisa</option>
+                <option value="business">Business</option>
+
+            </select>
+
+        </div>
+
+        <div id="agentsGrid" class="agents-grid"></div>
+
+    </section>
+
+
+    <!-- DETALHES -->
+
+    <section id="detailsView" class="details">
+
+        <button class="back" onclick="showExplore()">
+            ← Voltar para agentes
+        </button>
+
+        <div id="detailsContent"></div>
+
+    </section>
+
+
+    <!-- INSTALADOS -->
+
+    <section id="installedView" class="installed">
+
+        <div class="hero">
+            <h1>Agentes instalados</h1>
+            <p>Agentes disponíveis neste ambiente.</p>
+        </div>
+
+        <div id="installedList" class="installed-list"></div>
+
+    </section>
+
+</main>
+
+</div>
+
+
+<!-- MODAL DE INSTALAÇÃO -->
+
+<div id="modalBackdrop" class="modal-backdrop">
+
+    <div class="modal">
+
+        <h2 id="modalTitle">Instalando agente</h2>
+
+        <p id="modalDescription">
+            Preparando instalação...
+        </p>
+
+        <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div id="progressText" class="progress-text">
+            0%
+        </div>
+
+        <div class="modal-actions">
+
+            <button
+                id="closeModalButton"
+                class="button"
+                onclick="closeModal()"
+            >
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   DADOS DOS AGENTES
+   ============================================================ */
+
+const agents = [
+
+    {
+        id: "react-developer",
+
+        name: "React Developer",
+
+        category: "development",
+
+        categoryName: "Desenvolvimento",
+
+        icon: "⚛",
+
+        version: "1.2.0",
+
+        author: "Selfware",
+
+        description:
+            "Agente especializado em desenvolvimento frontend com React e JavaScript.",
+
+        skills: [
+            "React",
+            "JavaScript",
+            "Testing",
+            "CSS"
+        ],
+
+        rules: [
+            "Security",
+            "Git",
+            "Documentation"
+        ],
+
+        files: [
+            "AGENTS.md",
+            "manifest.json",
+            "skills/react.md",
+            "skills/testing.md",
+            "rules/security.md"
+        ]
+    },
+
+    {
+        id: "python-developer",
+
+        name: "Python Developer",
+
+        category: "development",
+
+        categoryName: "Desenvolvimento",
+
+        icon: "🐍",
+
+        version: "1.4.0",
+
+        author: "Selfware",
+
+        description:
+            "Agente para desenvolvimento backend, APIs e aplicações Python.",
+
+        skills: [
+            "Python",
+            "FastAPI",
+            "Testing",
+            "SQL"
+        ],
+
+        rules: [
+            "Security",
+            "Git",
+            "Code Quality"
+        ],
+
+        files: [
+            "AGENTS.md",
+            "manifest.json",
+            "skills/python.md",
+            "skills/api.md",
+            "rules/security.md"
+        ]
+    },
+
+    {
+        id: "seo-agent",
+
+        name: "SEO Agent",
+
+        category: "marketing",
+
+        categoryName: "Marketing",
+
+        icon: "⌕",
+
+        version: "2.1.0",
+
+        author: "Selfware",
+
+        description:
+            "Agente especializado em SEO técnico, conteúdo e análise de páginas.",
+
+        skills: [
+            "SEO",
+            "Content",
+            "Analytics",
+            "Research"
+        ],
+
+        rules: [
+            "Accuracy",
+            "Documentation",
+            "Research"
+        ],
+
+        files: [
+            "AGENTS.md",
+            "manifest.json",
+            "skills/seo.md",
+            "skills/content.md",
+            "rules/accuracy.md"
+        ]
+    },
+
+    {
+        id: "research-agent",
+
+        name: "Research Agent",
+
+        category: "research",
+
+        categoryName: "Pesquisa",
+
+        icon: "⌁",
+
+        version: "1.0.0",
+
+        author: "Selfware",
+
+        description:
+            "Agente para pesquisa, organização de informações e produção de relatórios.",
+
+        skills: [
+            "Research",
+            "Analysis",
+            "Reports"
+        ],
+
+        rules: [
+            "Accuracy",
+            "Sources",
+            "Documentation"
+        ],
+
+        files: [
+            "AGENTS.md",
+            "manifest.json",
+            "skills/research.md",
+            "skills/analysis.md",
+            "rules/sources.md"
+        ]
+    },
+
+    {
+        id: "business-agent",
+
+        name: "Business Analyst",
+
+        category: "business",
+
+        categoryName: "Business",
+
+        icon: "▦",
+
+        version: "1.1.0",
+
+        author: "Selfware",
+
+        description:
+            "Agente para análise de negócios, processos, produtos e oportunidades.",
+
+        skills: [
+            "Business",
+            "Analysis",
+            "Strategy"
+        ],
+
+        rules: [
+            "Accuracy",
+            "Documentation",
+            "Data"
+        ],
+
+        files: [
+            "AGENTS.md",
+            "manifest.json",
+            "skills/business.md",
+            "skills/strategy.md",
+            "rules/data.md"
+        ]
+    }
+
+];
+
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+
+let installedAgents =
+    JSON.parse(localStorage.getItem("selfwareInstalledAgents") || "[]");
+
+
+/* ============================================================
+   RENDER AGENTS
+   ============================================================ */
+
+function renderAgents() {
+
+    const grid = document.getElementById("agentsGrid");
+
+    const search =
+        document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase()
+            .trim();
+
+    const category =
+        document
+            .getElementById("categoryFilter")
+            .value;
+
+    const filtered = agents.filter(agent => {
+
+        const matchesSearch =
+            !search ||
+            agent.name.toLowerCase().includes(search) ||
+            agent.description.toLowerCase().includes(search) ||
+            agent.skills.some(skill =>
+                skill.toLowerCase().includes(search)
+            );
+
+        const matchesCategory =
+            !category ||
+            agent.category === category;
+
+        return matchesSearch && matchesCategory;
+
+    });
+
+
+    if (!filtered.length) {
+
+        grid.innerHTML = `
+            <div class="empty">
+                Nenhum agente encontrado.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    grid.innerHTML = filtered.map(agent => {
+
+        const installed =
+            installedAgents.includes(agent.id);
+
+        return `
+
+            <article class="agent-card">
+
+                <div class="agent-top">
+
+                    <div style="display:flex;gap:14px;">
+
+                        <div class="agent-icon">
+                            ${agent.icon}
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                ${agent.name}
+                            </h2>
+
+                            <p class="agent-description">
+                                ${agent.description}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="version">
+                        v${agent.version}
+                    </div>
+
+                </div>
+
+
+                <div class="skills">
+
+                    ${agent.skills.map(skill => `
+                        <span class="skill">
+                            ${skill}
+                        </span>
+                    `).join("")}
+
+                </div>
+
+
+                <div class="card-footer">
+
+                    <button
+                        class="button"
+                        onclick="showDetails('${agent.id}')"
+                    >
+                        Ver detalhes
+                    </button>
+
+
+                    ${
+                        installed
+
+                        ? `
+                            <button
+                                class="button success"
+                                onclick="uninstallAgent('${agent.id}')"
+                            >
+                                ✓ Instalado
+                            </button>
+                        `
+
+                        : `
+                            <button
+                                class="button primary"
+                                onclick="installAgent('${agent.id}')"
+                            >
+                                Instalar
+                            </button>
+                        `
+                    }
+
+                </div>
+
+            </article>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* ============================================================
+   DETALHES
+   ============================================================ */
+
+function showDetails(id) {
+
+    const agent =
+        agents.find(item => item.id === id);
+
+    if (!agent) return;
+
+
+    const installed =
+        installedAgents.includes(agent.id);
+
+
+    document.getElementById("detailsContent").innerHTML = `
+
+        <div class="details-header">
+
+            <div class="details-title">
+
+                <div class="agent-icon">
+                    ${agent.icon}
+                </div>
+
+                <div>
+
+                    <h1>${agent.name}</h1>
+
+                    <p>${agent.description}</p>
+
+                </div>
+
+            </div>
+
+            <div style="margin-top:24px;">
+
+                ${
+                    installed
+
+                    ? `
+                        <button
+                            class="button success"
+                            onclick="uninstallAgent('${agent.id}')"
+                        >
+                            ✓ Agente instalado
+                        </button>
+                    `
+
+                    : `
+                        <button
+                            class="button primary"
+                            onclick="installAgent('${agent.id}')"
+                        >
+                            Instalar agente
+                        </button>
+                    `
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="details-section">
+
+            <h3>Informações</h3>
+
+            <div class="meta-grid">
+
+                <div class="meta">
+                    <label>Versão</label>
+                    <strong>${agent.version}</strong>
+                </div>
+
+                <div class="meta">
+                    <label>Autor</label>
+                    <strong>${agent.author}</strong>
+                </div>
+
+                <div class="meta">
+                    <label>Categoria</label>
+                    <strong>${agent.categoryName}</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="details-section">
+
+            <h3>Skills</h3>
+
+            <div class="skills">
+
+                ${agent.skills.map(skill => `
+                    <span class="skill">
+                        ${skill}
+                    </span>
+                `).join("")}
+
+            </div>
+
+        </div>
+
+
+        <div class="details-section">
+
+            <h3>Rules</h3>
+
+            <div class="skills">
+
+                ${agent.rules.map(rule => `
+                    <span class="skill">
+                        ${rule}
+                    </span>
+                `).join("")}
+
+            </div>
+
+        </div>
+
+
+        <div class="details-section">
+
+            <h3>Arquivos</h3>
+
+            <ul class="file-list">
+
+                ${agent.files.map(file => `
+                    <li>
+                        ${file}
+                    </li>
+                `).join("")}
+
+            </ul>
+
+        </div>
+
+    `;
+
+
+    document.getElementById("exploreView")
+        .style.display = "none";
+
+    document.getElementById("installedView")
+        .classList.remove("visible");
+
+    document.getElementById("detailsView")
+        .classList.add("visible");
+
+    setNavigation("");
+
+}
+
+
+/* ============================================================
+   EXPLORAR
+   ============================================================ */
+
+function showExplore() {
+
+    document.getElementById("exploreView")
+        .style.display = "block";
+
+    document.getElementById("detailsView")
+        .classList.remove("visible");
+
+    document.getElementById("installedView")
+        .classList.remove("visible");
+
+    setNavigation("explore");
+
+}
+
+
+/* ============================================================
+   INSTALADOS
+   ============================================================ */
+
+function showInstalled() {
+
+    document.getElementById("exploreView")
+        .style.display = "none";
+
+    document.getElementById("detailsView")
+        .classList.remove("visible");
+
+    document.getElementById("installedView")
+        .classList.add("visible");
+
+    renderInstalled();
+
+    setNavigation("installed");
+
+}
+
+
+function renderInstalled() {
+
+    const container =
+        document.getElementById("installedList");
+
+
+    const installed =
+        agents.filter(agent =>
+            installedAgents.includes(agent.id)
+        );
+
+
+    if (!installed.length) {
+
+        container.innerHTML = `
+            <div class="empty">
+                <strong>Nenhum agente instalado.</strong>
+                <br><br>
+                Explore o Registry para encontrar um agente.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML =
+        installed.map(agent => `
+
+            <div class="installed-item">
+
+                <div class="installed-info">
+
+                    <div class="agent-icon">
+                        ${agent.icon}
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            ${agent.name}
+                        </strong>
+
+                        <div class="status">
+                            ● Instalado · v${agent.version}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div style="display:flex;gap:8px;">
+
+                    <button
+                        class="button"
+                        onclick="showDetails('${agent.id}')"
+                    >
+                        Abrir
+                    </button>
+
+                    <button
+                        class="button"
+                        onclick="uninstallAgent('${agent.id}')"
+                    >
+                        Remover
+                    </button>
+
+                </div>
+
+            </div>
+
+        `).join("");
+
+}
+
+
+/* ============================================================
+   INSTALAÇÃO
+   ============================================================ */
+
+function installAgent(id) {
+
+    const agent =
+        agents.find(item => item.id === id);
+
+    if (!agent) return;
+
+
+    const modal =
+        document.getElementById("modalBackdrop");
+
+    const title =
+        document.getElementById("modalTitle");
+
+    const description =
+        document.getElementById("modalDescription");
+
+    const bar =
+        document.getElementById("progressBar");
+
+    const text =
+        document.getElementById("progressText");
+
+    const close =
+        document.getElementById("closeModalButton");
+
+
+    modal.classList.add("visible");
+
+    title.textContent =
+        `Instalando ${agent.name}`;
+
+    description.textContent =
+        "Preparando o agente e seus arquivos...";
+
+    bar.style.width = "0%";
+
+    text.textContent = "0%";
+
+    close.disabled = true;
+
+
+    let progress = 0;
+
+
+    const interval = setInterval(() => {
+
+        progress += Math.floor(Math.random() * 13) + 7;
+
+        if (progress >= 100) {
+
+            progress = 100;
+
+            clearInterval(interval);
+
+            installedAgents.push(agent.id);
+
+            localStorage.setItem(
+                "selfwareInstalledAgents",
+                JSON.stringify(installedAgents)
+            );
+
+            description.textContent =
+                "Agente instalado com sucesso.";
+
+            close.textContent = "Concluir";
+
+            close.disabled = false;
+
+        }
+
+
+        bar.style.width =
+            progress + "%";
+
+        text.textContent =
+            progress + "%";
+
+    }, 180);
+
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById("modalBackdrop")
+        .classList.remove("visible");
+
+    document
+        .getElementById("closeModalButton")
+        .textContent = "Cancelar";
+
+    document
+        .getElementById("closeModalButton")
+        .disabled = false;
+
+    renderAgents();
+    renderInstalled();
+
+}
+
+
+/* ============================================================
+   DESINSTALAR
+   ============================================================ */
+
+function uninstallAgent(id) {
+
+    const agent =
+        agents.find(item => item.id === id);
+
+    if (!agent) return;
+
+
+    if (
+        !confirm(
+            `Remover o agente "${agent.name}"?`
+        )
+    ) {
+        return;
+    }
+
+
+    installedAgents =
+        installedAgents.filter(
+            item => item !== id
+        );
+
+
+    localStorage.setItem(
+        "selfwareInstalledAgents",
+        JSON.stringify(installedAgents)
+    );
+
+
+    renderAgents();
+    renderInstalled();
+
+
+    if (
+        document
+            .getElementById("detailsView")
+            .classList.contains("visible")
+    ) {
+        showDetails(id);
+    }
+
+}
+
+
+/* ============================================================
+   NAVEGAÇÃO
+   ============================================================ */
+
+function setNavigation(active) {
+
+    document
+        .getElementById("navExplore")
+        .classList.toggle(
+            "active",
+            active === "explore"
+        );
+
+    document
+        .getElementById("navInstalled")
+        .classList.toggle(
+            "active",
+            active === "installed"
+        );
+
+}
+
+
+/* ============================================================
+   INICIALIZAÇÃO
+   ============================================================ */
+
+renderAgents();
+
+</script>
+
+</body>
+</html>

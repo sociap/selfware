@@ -1,5 +1,13 @@
 [
   {
+    "tag": "IA aplicada ao B2B",
+    "title": "Como escolher o primeiro processo para automatizar com IA",
+    "subtitle": "Critérios práticos para escolher um piloto com impacto mensurável, dados acessíveis e risco controlado.",
+    "href": "post/como-escolher-primeiro-processo-automatizar-ia.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre automação com inteligência artificial"
+  },
+  {
     "tag": "Tendências de IA",
     "title": "Tendências de IA para empresas em 2026",
     "subtitle": "Agentes, modelos especializados, multimodalidade e governança: os movimentos que estão levando a IA para dentro da operação.",
