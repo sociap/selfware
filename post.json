@@ -1,6 +1,22 @@
 [
   {
     "tag": "IA aplicada ao B2B",
+    "title": "Quanto custa implementar IA em uma empresa?",
+    "subtitle": "Entenda os componentes do investimento e como estimar escopo, operação e retorno antes de começar.",
+    "href": "post/quanto-custa-implementar-ia.html",
+    "image": "media/post-costs.svg",
+    "imageAlt": "Ilustração sobre custos de implementação de inteligência artificial em empresas"
+  },
+  {
+    "tag": "Guia Estratégico",
+    "title": "Como escolher uma empresa para desenvolver um projeto de IA",
+    "subtitle": "Critérios para avaliar experiência, dados, integração, segurança e operação contínua em projetos de IA.",
+    "href": "post/como-escolher-empresa-projeto-ia.html",
+    "image": "media/post-software-house.svg",
+    "imageAlt": "Ilustração sobre a seleção de uma empresa para desenvolver um projeto de IA"
+  },
+  {
+    "tag": "IA aplicada ao B2B",
     "title": "Como integrar IA ao ERP e ao CRM",
     "subtitle": "Casos de uso, etapas e controles para conectar inteligência artificial aos sistemas que sua equipe já usa.",
     "href": "post/integrar-ia-erp-crm.html",
