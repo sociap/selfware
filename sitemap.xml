@@ -25,7 +25,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://selfware.com.br/ideas/futuro-do-ia.html</loc>
+    <loc>https://selfware.com.br/ideas/futuro-da-ia.html</loc>
     <lastmod>2026-09-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -200,6 +200,18 @@
   </url>
   <url>
     <loc>https://selfware.com.br/post/solucao-ia-propria-ou-pronta.html</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://selfware.com.br/post/quanto-custa-implementar-ia.html</loc>
+    <lastmod>2026-10-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://selfware.com.br/post/como-escolher-empresa-projeto-ia.html</loc>
     <lastmod>2026-10-06</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
