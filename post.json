@@ -1,5 +1,13 @@
 [
   {
+    "tag": "IA aplicada ao B2B",
+    "title": "O que é IA-First?",
+    "subtitle": "Entenda como construir produtos a partir do que a IA pode fazer — muito além de adicionar um chatbot.",
+    "href": "post/ia-first-o-que-e.html",
+    "image": "media/post-ia-automacao.svg",
+    "imageAlt": "Ilustração sobre produtos de software construídos com IA como parte fundamental"
+  },
+  {
     "tag": "Futuros da IA",
     "title": "Os 12 futuros da inteligência artificial",
     "subtitle": "Nenhum futuro é inevitável: o mapa completo dos cenários da IA, baseado em Life 3.0 de Max Tegmark.",
