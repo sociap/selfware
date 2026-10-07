@@ -59,7 +59,7 @@ jobs:
                 if [ "$file" = "index.html" ]; then
                   url="https://selfware.com.br/"
                 else
-                  path="${file%.html}"
+                  path="${file#site/}"
                   url="https://selfware.com.br/${path}"
                 fi
                 urls="${urls}\"${url}\","
