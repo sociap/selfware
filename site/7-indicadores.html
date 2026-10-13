@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>7 Indicadores Fundamentais para Empreendedores</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #16213e 100%);
+      color: #f0f0f0;
+      min-height: 100vh;
+      padding: 40px 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    header p {
+      color: #a0a0a0;
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .quote {
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid #7b2ff7;
+      padding: 20px 25px;
+      margin: 30px 0 50px;
+      border-radius: 0 12px 12px 0;
+      font-style: italic;
+      color: #e0e0e0;
+    }
+
+    .cards {
+      display: grid;
+      gap: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 28px 30px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(123,47,247,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-number {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 3rem;
+      font-weight: 800;
+      color: rgba(123,47,247,0.15);
+      line-height: 1;
+    }
+
+    .card h2 {
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+      color: #00d4ff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card h2 span {
+      background: linear-gradient(90deg, #7b2ff7, #00d4ff);
+      color: white;
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .card p {
+      color: #c0c0c0;
+      margin-bottom: 16px;
+    }
+
+    .formula {
+      background: rgba(0,0,0,0.3);
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: #7bffb2;
+      border: 1px solid rgba(123,255,178,0.2);
+      margin-top: 12px;
+    }
+
+    .tip {
+      margin-top: 14px;
+      font-size: 0.9rem;
+      color: #a0a0a0;
+      display: flex;
+      gap: 8px;
+    }
+
+    .tip::before {
+      content: "💡";
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 60px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.7rem; }
+      .card { padding: 22px 20px; }
+      .card-number { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>7 Indicadores Fundamentais</h1>
+      <p>Para criar um negócio mais forte e tomar decisões mais inteligentes</p>
+    </header>
+
+    <div class="quote">
+      “Nunca inicie um negócio até que entenda estes conceitos-chave.”
+    </div>
+
+    <div class="cards">
+
+      <!-- 1. ROI -->
+      <div class="card">
+        <div class="card-number">01</div>
+        <h2>Retorno sobre o Investimento <span>ROI</span></h2>
+        <p>Mostra quanto lucro você obteve em relação ao valor que investiu.</p>
+        <div class="formula">
+          ROI = (Lucro líquido / Valor investido) × 100%<br>
+          ROI = ((Receita total − Valor investido) / Valor investido) × 100%
+        </div>
+      </div>
+
+      <!-- 2. CAC -->
+      <div class="card">
+        <div class="card-number">02</div>
+        <h2>Custo de Aquisição de Clientes <span>CAC</span></h2>
+        <p>Mostra quanto você gasta, em média, para adquirir um novo cliente.</p>
+        <div class="formula">
+          CAC = Custos totais de marketing e vendas / Número de novos clientes
+        </div>
+        <div class="tip">Meça os custos e os novos clientes no mesmo período.</div>
+      </div>
+
+      <!-- 3. AOV -->
+      <div class="card">
+        <div class="card-number">03</div>
+        <h2>Valor Médio do Pedido <span>AOV</span></h2>
+        <p>Mostra quanto os clientes gastam, em média, por pedido.</p>
+        <div class="formula">
+          AOV = Receita total / Número de pedidos
+        </div>
+        <div class="tip">Meça a receita e a quantidade de pedidos no mesmo período.</div>
+      </div>
+
+      <!-- 4. Runway -->
+      <div class="card">
+        <div class="card-number">04</div>
+        <h2>Runway <span>Caixa</span></h2>
+        <p>Mostra quantos meses a empresa pode operar com o dinheiro disponível.</p>
+        <div class="formula">
+          Runway = Caixa disponível / Saída líquida de caixa mensal<br>
+          Runway = Caixa disponível / (Saídas mensais − Entradas mensais)
+        </div>
+        <div class="tip">O resultado é expresso em meses. Fundamental para startups.</div>
+      </div>
+
+      <!-- 5. Churn -->
+      <div class="card">
+        <div class="card-number">05</div>
+        <h2>Taxa de Perda de Clientes <span>Churn</span></h2>
+        <p>A porcentagem de clientes que você perdeu durante o período selecionado.</p>
+        <div class="formula">
+          Churn = (Clientes perdidos no período / Clientes no início do período) × 100%
+        </div>
+      </div>
+
+      <!-- 6. MRR -->
+      <div class="card">
+        <div class="card-number">06</div>
+        <h2>Receita Recorrente Mensal <span>MRR</span></h2>
+        <p>Receita proveniente de assinaturas e contratos com pagamentos recorrentes, expressa em valor mensal.</p>
+        <div class="formula">
+          MRR = Número de clientes pagantes × Receita mensal média por cliente
+        </div>
+        <div class="tip">Exclui vendas únicas. Divida o preço da assinatura anual por 12.</div>
+      </div>
+
+      <!-- 7. EBITDA -->
+      <div class="card">
+        <div class="card-number">07</div>
+        <h2>EBITDA <span>Lucro Operacional</span></h2>
+        <p>Mostra o desempenho financeiro antes de juros, impostos de renda, depreciação e amortização.</p>
+        <div class="formula">
+          EBITDA = Lucro líquido + Juros + Impostos + Depreciação + Amortização
+        </div>
+        <div class="tip">Inclui a depreciação de ativos fixos e a amortização de ativos intangíveis.</div>
+      </div>
+
+    </div>
+
+    <footer>
+      Baseado no conteúdo de @mentesdeslumbrantess<br>
+      “Se você não consegue medir, não consegue evoluir.”
+    </footer>
+  </div>
+</body>
+</html>
