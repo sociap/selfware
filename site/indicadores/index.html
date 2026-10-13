@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sete Indicadores</title>
+    <meta
+      name="description"
+      content="Os 7 indicadores para ler o seu negócio sem ser gênio de finanças: faturamento, margem, caixa, equilíbrio, ticket, aquisição e valor do cliente."
+    />
+    <meta name="theme-color" content="#1e3a32" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,520;9..144,640&family=Outfit:wght@400;500;600&display=swap"
+    />
+    <style>
+      /* ---------- tokens ---------- */
+      :root {
+        --font-sans: "Outfit", ui-sans-serif, system-ui, -apple-system, sans-serif;
+        --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+        --font-mono: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+
+        --paper: #f3efe6;
+        --card: #fffdf8;
+        --ink: #1c1914;
+        --muted: #6f675c;
+        --line: #e3dac8;
+        --brass: #8c6232;
+        --brass-soft: #f4e7d4;
+        --forest: #1e3a32;
+        --forest-mist: #e7efe9;
+        --brass-mist: #d7c4a4;
+        --sand: #c4b39a;
+        --blush: #f8e4e1;
+        --bad: #8c332c;
+
+        --radius-card: 1.25rem;
+        --maxw: 72rem;
+      }
+
+      /* ---------- base ---------- */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html {
+        background: var(--paper);
+        color: var(--ink);
+        scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-family: var(--font-sans);
+        font-size: 16px;
+        line-height: 1.5;
+        min-height: 100%;
+        background:
+          radial-gradient(1200px 500px at 100% -10%, rgb(140 98 50 / 0.08), transparent 55%),
+          var(--paper);
+      }
+
+      ::selection {
+        background: #e7d3b0;
+        color: var(--ink);
+      }
+
+      button,
+      [role="button"] {
+        cursor: pointer;
+        font: inherit;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      h1,
+      h2,
+      h3 {
+        font-family: var(--font-display);
+        font-weight: 500;
+        margin: 0;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      input,
+      textarea {
+        font: inherit;
+        color: inherit;
+      }
+
+      input:focus,
+      textarea:focus {
+        outline: none;
+      }
+
+      .wrap {
+        width: 100%;
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      @media (min-width: 640px) {
+        .wrap {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+      }
+
+      .font-display {
+        font-family: var(--font-display);
+      }
+
+      /* ---------- header ---------- */
+      .site-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+        background: color-mix(in srgb, var(--paper) 90%, transparent);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .site-header .wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+
+      .brand {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        padding: 0.5rem 0;
+      }
+
+      .brand .brand-mark {
+        font-family: var(--font-display);
+        font-size: 1.25rem;
+        letter-spacing: -0.01em;
+        color: var(--forest);
+      }
+
+      .brand .brand-sub {
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.875rem;
+      }
+
+      .nav a {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.5rem 0.25rem;
+        color: var(--muted);
+        transition: color 0.15s ease;
+      }
+
+      .nav a:hover {
+        color: var(--ink);
+      }
+
+      .nav .nav-hide {
+        display: none;
+      }
+
+      @media (min-width: 640px) {
+        .nav .nav-hide {
+          display: inline;
+        }
+      }
+
+      .nav .nav-cta {
+        border-radius: 999px;
+        background: var(--forest);
+        color: var(--paper);
+        padding: 0.5rem 0.875rem;
+        font-weight: 500;
+      }
+      .nav .nav-cta:hover {
+        color: var(--paper);
+        opacity: 0.92;
+      }
+
+      /* ---------- main ---------- */
+      main {
+        padding-bottom: 6rem;
+      }
+
+      section {
+        scroll-margin-top: 5rem;
+      }
+
+      /* ---------- hero ---------- */
+      .hero {
+        display: grid;
+        gap: 2.5rem;
+        align-items: end;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+      }
+
+      @media (min-width: 1024px) {
+        .hero {
+          grid-template-columns: 1.3fr 0.7fr;
+          padding-top: 4rem;
+          padding-bottom: 4rem;
+        }
+      }
+
+      .eyebrow {
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--brass);
+      }
+
+      .hero h1 {
+        margin-top: 1rem;
+        max-width: 32rem;
+        font-size: clamp(2.5rem, 8vw, 3.75rem);
+        line-height: 1.08;
+        letter-spacing: -0.01em;
+        color: var(--forest);
+      }
+
+      .hero .lede {
+        margin-top: 1.25rem;
+        max-width: 32rem;
+        font-size: 1.125rem;
+        line-height: 1.65;
+        color: var(--muted);
+      }
+
+      .scorecard {
+        border-radius: 1.5rem;
+        border: 1px solid var(--line);
+        background: var(--forest);
+        color: var(--paper);
+        padding: 1.5rem;
+      }
+
+      .scorecard .sc-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--brass-mist);
+      }
+
+      .scorecard .sc-value {
+        margin-top: 0.75rem;
+        font-family: var(--font-display);
+        font-size: 3rem;
+        line-height: 1;
+      }
+
+      .scorecard .sc-value span {
+        font-size: 1.5rem;
+        color: var(--brass-mist);
+      }
+
+      .scorecard .sc-text {
+        margin-top: 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--forest-mist);
+      }
+
+      .scorecard .sc-track {
+        margin-top: 1rem;
+        font-size: 0.875rem;
+        color: var(--brass-mist);
+      }
+
+      /* ---------- section headers ---------- */
+      .section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .section-head h2 {
+        font-size: 1.875rem;
+        color: var(--forest);
+      }
+
+      .section-head .hint {
+        margin-top: 0.25rem;
+        max-width: 36rem;
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .btn {
+        border: 1px solid transparent;
+        background: transparent;
+        border-radius: 999px;
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease,
+          border-color 0.15s ease;
+      }
+
+      .btn-outline {
+        border-color: var(--line);
+        background: var(--card);
+        color: var(--ink);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--brass);
+      }
+
+      .btn-ghost {
+        color: var(--muted);
+      }
+
+      .btn-ghost:hover {
+        color: var(--ink);
+      }
+
+      /* ---------- fields ---------- */
+      .fields {
+        margin-top: 1.5rem;
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      @media (min-width: 640px) {
+        .fields {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .fields {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .field {
+        display: block;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: var(--card);
+        padding: 0.75rem 1rem;
+        transition: border-color 0.15s ease;
+      }
+
+      .field:focus-within {
+        border-color: var(--brass);
+      }
+
+      .field .f-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .field .f-hint {
+        display: block;
+        margin-top: 0.125rem;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      .field .f-input {
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+      }
+
+      .field .f-money {
+        font-size: 0.875rem;
+        color: var(--brass);
+      }
+
+      .field input {
+        width: 100%;
+        border: 0;
+        background: transparent;
+        font-family: var(--font-display);
+        font-size: 1.5rem;
+        line-height: 1.2;
+        padding: 0;
+      }
+
+      .field input::placeholder {
+        color: color-mix(in srgb, var(--line) 85%, var(--muted));
+      }
+
+      /* ---------- split bar ---------- */
+      .split {
+        margin-top: 1rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: var(--card);
+        padding: 1rem;
+      }
+
+      .split-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .split-bar {
+        margin-top: 0.75rem;
+        display: flex;
+        height: 0.75rem;
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--paper);
+      }
+
+      .split-bar i {
+        display: block;
+        height: 100%;
+      }
+
+      .bg-sand {
+        background: var(--sand);
+      }
+      .bg-brass {
+        background: var(--brass);
+      }
+      .bg-forest {
+        background: var(--forest);
+      }
+
+      .legend {
+        margin-top: 0.75rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 1.25rem;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
+
+      .legend li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .legend .dot {
+        display: inline-block;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 999px;
+      }
+
+      /* ---------- reading ---------- */
+      .reading {
+        margin-top: 4rem;
+      }
+
+      .chips {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      @media (max-width: 639px) {
+        .chips {
+          margin-left: -1rem;
+          margin-right: -1rem;
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+
+      .chip {
+        flex: 0 0 auto;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        background: var(--card);
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+      }
+
+      .chip .idx {
+        color: var(--brass);
+      }
+
+      .cards {
+        margin-top: 1rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      .card {
+        scroll-margin-top: 6rem;
+        display: grid;
+        gap: 1.5rem;
+        border: 1px solid var(--line);
+        border-radius: 1.5rem;
+        background: var(--card);
+        padding: 1.25rem;
+      }
+
+      @media (min-width: 640px) {
+        .card {
+          grid-template-columns: auto 1fr;
+          padding: 1.75rem;
+        }
+      }
+
+      .card .c-head {
+        min-width: 0;
+      }
+
+      @media (min-width: 640px) {
+        .card .c-head {
+          width: 11rem;
+        }
+      }
+
+      .card .c-index {
+        font-family: var(--font-display);
+        font-size: 2.25rem;
+        color: var(--brass);
+      }
+
+      .card h3 {
+        margin-top: 0.5rem;
+        font-size: 1.5rem;
+        line-height: 1.15;
+        color: var(--forest);
+      }
+
+      .card .c-question {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+
+      .value-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+
+      .value-row .big {
+        font-family: var(--font-display);
+        font-size: clamp(2.25rem, 7vw, 3rem);
+        letter-spacing: -0.01em;
+        line-height: 1;
+      }
+
+      .badge {
+        border-radius: 999px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .badge-good {
+        background: var(--forest);
+        color: var(--paper);
+      }
+      .badge-warn {
+        background: var(--brass-soft);
+        color: var(--brass);
+      }
+      .badge-bad {
+        background: var(--blush);
+        color: var(--bad);
+      }
+      .badge-neutral {
+        background: var(--paper);
+        color: var(--muted);
+      }
+
+      .c-detail {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--muted);
+      }
+
+      .c-verdict {
+        margin-top: 1rem;
+        max-width: 42rem;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+      .c-note {
+        margin-top: 0.75rem;
+        max-width: 42rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .c-formula {
+        margin-top: 1rem;
+        border-top: 1px solid var(--line);
+        padding-top: 0.75rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        color: var(--brass);
+      }
+
+      /* ---------- bottom grid ---------- */
+      .bottom {
+        margin-top: 4rem;
+        display: grid;
+        gap: 1rem;
+      }
+
+      @media (min-width: 1024px) {
+        .bottom {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .panel {
+        border: 1px solid var(--line);
+        border-radius: 1.5rem;
+        background: var(--card);
+        padding: 1.5rem;
+      }
+
+      .panel h2 {
+        font-size: 1.875rem;
+        color: var(--forest);
+      }
+
+      .panel .p-sub {
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      .track {
+        margin-top: 1.25rem;
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .track button {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: var(--paper);
+        color: var(--ink);
+        padding: 0.75rem 1rem;
+        text-align: left;
+        font-size: 0.875rem;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease,
+          border-color 0.15s ease;
+      }
+
+      .track button[aria-pressed="true"] {
+        border-color: var(--forest);
+        background: var(--forest);
+        color: var(--paper);
+      }
+
+      .track .check {
+        display: grid;
+        flex: 0 0 auto;
+        width: 1.25rem;
+        height: 1.25rem;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        font-size: 0.6875rem;
+        line-height: 1;
+      }
+
+      .track button[aria-pressed="true"] .check {
+        border-color: var(--paper);
+      }
+
+      .note-field {
+        display: block;
+        margin-top: 1.25rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+
+      .note-field + .note-field {
+        margin-top: 1rem;
+      }
+
+      .note-field textarea,
+      .note-field input {
+        display: block;
+        width: 100%;
+        margin-top: 0.5rem;
+        border: 1px solid var(--line);
+        border-radius: 1rem;
+        background: var(--paper);
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        resize: vertical;
+      }
+
+      .note-field textarea:focus,
+      .note-field input:focus {
+        border-color: var(--brass);
+      }
+
+      footer {
+        margin-top: 4rem;
+        border-top: 1px solid var(--line);
+        padding-top: 1.5rem;
+        font-size: 0.875rem;
+        line-height: 1.6;
+        color: var(--muted);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          animation: none !important;
+          transition: none !important;
+          scroll-behavior: auto !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="#topo">
+          <span class="brand-mark">Sete</span>
+          <span class="brand-sub">indicadores</span>
+        </a>
+        <nav class="nav">
+          <a class="nav-hide" href="#numeros">Números</a>
+          <a href="#leitura">Leitura</a>
+          <a class="nav-cta" href="#numeros">Calcular</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="topo" class="wrap">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Para consultar sempre que for olhar o mês</p>
+          <h1>Se você não mede, não evolui.</h1>
+          <p class="lede">
+            Sete indicadores. Nenhum exige ser gênio de finanças — só entender o que os números
+            do seu negócio já estão dizendo.
+          </p>
+        </div>
+        <aside class="scorecard">
+          <p class="sc-label">Leitura deste mês</p>
+          <p class="sc-value"><span id="score-healthy">0</span><span>/</span><span id="score-filled">7</span></p>
+          <p class="sc-text" id="score-text"></p>
+          <p class="sc-track" id="score-track">Você marca acompanhar 0 de 7.</p>
+        </aside>
+      </section>
+
+      <section id="numeros">
+        <div class="section-head">
+          <div>
+            <h2>Os números do mês</h2>
+            <p class="hint" id="numbers-hint"></p>
+          </div>
+          <div class="actions">
+            <button type="button" class="btn btn-outline" id="btn-example">Ver exemplo</button>
+            <button type="button" class="btn btn-ghost" id="btn-clear">Limpar</button>
+          </div>
+        </div>
+
+        <div class="fields" id="fields"></div>
+
+        <div class="split">
+          <div class="split-top">
+            <span>Para onde vai cada real vendido</span>
+            <span id="split-revenue">sem faturamento</span>
+          </div>
+          <div class="split-bar" id="split-bar"></div>
+          <ul class="legend">
+            <li><i class="dot bg-sand"></i><span id="legend-cogs">Custo direto</span></li>
+            <li><i class="dot bg-brass"></i><span id="legend-expenses">Despesas</span></li>
+            <li><i class="dot bg-forest"></i><span id="legend-profit"></span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="leitura" class="reading">
+        <div class="section-head">
+          <div>
+            <h2>A leitura</h2>
+            <p class="hint">Os mesmos sete pontos, agora com os seus números dentro.</p>
+          </div>
+        </div>
+
+        <div class="chips" id="chips"></div>
+        <div class="cards" id="cards"></div>
+      </section>
+
+      <section class="bottom">
+        <div class="panel">
+          <h2>Quantas você já acompanha?</h2>
+          <p class="p-sub">
+            Marque o que já entra na sua rotina. O resto é o dever de casa da próxima segunda.
+          </p>
+          <ul class="track" id="track"></ul>
+        </div>
+
+        <div class="panel">
+          <h2>Revisão da semana</h2>
+          <p class="p-sub">Três linhas. O suficiente para transformar número em decisão.</p>
+
+          <label class="note-field">
+            O que os números disseram
+            <textarea id="note-reading" rows="3" placeholder="A margem segurou, mas o caixa atrasou por causa das vendas a prazo."></textarea>
+          </label>
+          <label class="note-field">
+            A decisão desta semana
+            <textarea id="note-decision" rows="3" placeholder="Cobrar o que está em aberto antes de abrir novo anúncio."></textarea>
+          </label>
+          <label class="note-field">
+            O número que vou olhar toda segunda
+            <input id="note-watch" placeholder="Fluxo de caixa dos próximos 15 dias" />
+          </label>
+        </div>
+      </section>
+
+      <footer>
+        Leitura educativa para o dono do negócio sentar com os próprios números. Não substitui
+        contador nem consultoria. As faixas — margem acima de 15%, LTV pelo menos 3 vezes o custo
+        de aquisição — são referências gerais, não regra do seu setor.
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        var STORAGE_KEY = "sete-indicadores-v1";
+
+        var EMPTY = {
+          revenue: 0,
+          cogs: 0,
+          expenses: 0,
+          cashIn: 0,
+          cashOut: 0,
+          sales: 0,
+          newCustomers: 0,
+          acquisitionSpend: 0,
+          purchasesPerYear: 0,
+          yearsRetained: 0,
+          goal: 0,
+        };
+
+        var EXAMPLE = {
+          revenue: 48000,
+          cogs: 14400,
+          expenses: 22000,
+          cashIn: 36000,
+          cashOut: 33200,
+          sales: 160,
+          newCustomers: 28,
+          acquisitionSpend: 4200,
+          purchasesPerYear: 4,
+          yearsRetained: 2.5,
+          goal: 55000,
+        };
+
+        var FIELDS = [
+          { key: "revenue", label: "Faturamento do mês", hint: "Tudo que foi vendido", money: true },
+          { key: "cogs", label: "Custo do que foi vendido", hint: "Produto, insumo, hora direta", money: true },
+          { key: "expenses", label: "Despesas do mês", hint: "Aluguel, time, contas, ferramentas", money: true },
+          { key: "cashIn", label: "Dinheiro que entrou", hint: "O que caiu no caixa de verdade", money: true },
+          { key: "cashOut", label: "Dinheiro que saiu", hint: "Pagamentos feitos no período", money: true },
+          { key: "sales", label: "Número de vendas", hint: "Pedidos ou atendimentos", money: false },
+          { key: "newCustomers", label: "Clientes novos", hint: "Primeira compra neste mês", money: false },
+          { key: "acquisitionSpend", label: "Gasto para conquistar", hint: "Anúncio, comissão, tráfego", money: true },
+          { key: "purchasesPerYear", label: "Compras por ano", hint: "Quantas vezes a pessoa volta", money: false },
+          { key: "yearsRetained", label: "Anos com o cliente", hint: "Tempo médio de relacionamento", money: false },
+          { key: "goal", label: "Meta de faturamento", hint: "Opcional. Deixe vazio se não tiver", money: true },
+        ];
+
+        var TRACK_ITEMS = [
+          { id: "faturamento", label: "Faturamento do mês" },
+          { id: "margem", label: "Lucro e margem" },
+          { id: "caixa", label: "Entradas e saídas de caixa" },
+          { id: "equilibrio", label: "Ponto de equilíbrio" },
+          { id: "ticket", label: "Ticket médio" },
+          { id: "cac", label: "Custo para trazer um cliente" },
+          { id: "ltv", label: "Quanto o cliente vale no tempo" },
+        ];
+
+        var TONE_LABEL = {
+          good: "No caminho",
+          warn: "Atenção",
+          bad: "Aperto",
+          neutral: "Em branco",
+        };
+
+        /* ---------------- formatting ---------------- */
+        var brl = new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+          maximumFractionDigits: 0,
+        });
+        var brlExact = new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        });
+        var pct = new Intl.NumberFormat("pt-BR", {
+          style: "percent",
+          maximumFractionDigits: 1,
+        });
+        var num = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 1 });
+        var inputFmt = new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 2 });
+
+        function money(value, exact) {
+          return (exact ? brlExact : brl).format(value);
+        }
+
+        function parseLoose(raw) {
+          var t = String(raw == null ? "" : raw)
+            .trim()
+            .replace(/\s/g, "");
+          if (!t) return 0;
+          var hasComma = t.indexOf(",") !== -1;
+          var hasDot = t.indexOf(".") !== -1;
+          var norm = t;
+          if (hasComma && hasDot) {
+            norm = t.replace(/\./g, "").replace(",", ".");
+          } else if (hasComma) {
+            norm = t.replace(",", ".");
+          } else if (hasDot) {
+            var parts = t.split(".");
+            if (parts.length > 1 && parts.slice(1).every(function (p) { return p.length === 3; })) {
+              norm = parts.join("");
+            }
+          }
+          var value = Number(norm);
+          return isFinite(value) ? value : 0;
+        }
+
+        function formatInput(value) {
+          if (!value) return "";
+          return inputFmt.format(value);
+        }
+
+        function finite(value) {
+          return isFinite(value) ? value : 0;
+        }
+
+        /* ---------------- analysis ---------------- */
+        function analyze(raw) {
+          var revenue = Math.max(0, finite(raw.revenue));
+          var cogs = Math.max(0, finite(raw.cogs));
+          var expenses = Math.max(0, finite(raw.expenses));
+          var cashIn = Math.max(0, finite(raw.cashIn));
+          var cashOut = Math.max(0, finite(raw.cashOut));
+          var sales = Math.max(0, finite(raw.sales));
+          var newCustomers = Math.max(0, finite(raw.newCustomers));
+          var acquisitionSpend = Math.max(0, finite(raw.acquisitionSpend));
+          var purchasesPerYear = Math.max(0, finite(raw.purchasesPerYear));
+          var yearsRetained = Math.max(0, finite(raw.yearsRetained));
+          var goal = Math.max(0, finite(raw.goal));
+
+          var hasRevenue = revenue > 0;
+          var gross = revenue - cogs;
+          var grossMargin = hasRevenue ? gross / revenue : null;
+          var net = revenue - cogs - expenses;
+          var netMargin = hasRevenue ? net / revenue : null;
+          var cash = cashIn - cashOut;
+          var breakEven = grossMargin !== null && grossMargin > 0 ? expenses / grossMargin : null;
+          var ticket = sales > 0 ? revenue / sales : null;
+          var cac = newCustomers > 0 ? acquisitionSpend / newCustomers : null;
+          var ltv =
+            ticket !== null && purchasesPerYear > 0 && yearsRetained > 0
+              ? ticket * purchasesPerYear * yearsRetained
+              : null;
+          var ltvCac = ltv !== null && cac !== null && cac > 0 ? ltv / cac : null;
+          var profitLtv = ltv !== null && grossMargin !== null ? ltv * Math.max(grossMargin, 0) : null;
+
+          var revenueTone = !hasRevenue
+            ? "neutral"
+            : goal <= 0
+              ? "neutral"
+              : revenue >= goal
+                ? "good"
+                : revenue >= goal * 0.85
+                  ? "warn"
+                  : "bad";
+
+          var marginTone =
+            netMargin === null ? "neutral" : netMargin >= 0.15 ? "good" : netMargin >= 0.05 ? "warn" : "bad";
+
+          var cashTone = "neutral";
+          var cashVerdict = "Preencha entradas e saídas.";
+          if (cashIn > 0 || cashOut > 0) {
+            if (net > 0 && cash < 0) {
+              cashTone = "warn";
+              cashVerdict = "Há lucro no papel e falta dinheiro no caixa.";
+            } else if (net < 0 && cash > 0) {
+              cashTone = "warn";
+              cashVerdict = "O caixa está positivo, mas o mês deu prejuízo.";
+            } else if (cash < 0) {
+              cashTone = "bad";
+              cashVerdict = "Saiu mais dinheiro do que entrou.";
+            } else {
+              cashTone = "good";
+              cashVerdict = "O caixa do mês fechou no positivo.";
+            }
+          }
+
+          var evenTone = "neutral";
+          var evenVerdict = "Precisa de faturamento e de margem de contribuição.";
+          if (breakEven !== null && hasRevenue) {
+            if (revenue >= breakEven) {
+              evenTone = "good";
+              evenVerdict = "Você passou do equilíbrio em " + money(revenue - breakEven) + ".";
+            } else {
+              evenTone = "bad";
+              evenVerdict = "Faltam " + money(breakEven - revenue) + " para empatar.";
+            }
+          } else if (grossMargin !== null && grossMargin <= 0) {
+            evenTone = "bad";
+            evenVerdict = "O custo do vendido come o faturamento. Não há equilíbrio possível.";
+          }
+
+          var ticketTone = "neutral";
+          var ticketVerdict =
+            ticket === null
+              ? "Informe o número de vendas."
+              : "É o valor médio de cada venda. Subir o ticket costuma doer menos do que dobrar clientes.";
+          if (ticket !== null && cac !== null && cac > 0) {
+            if (ticket >= cac) {
+              ticketTone = "good";
+              ticketVerdict = "A primeira venda já cobre o que custou trazer o cliente.";
+            } else {
+              ticketTone = "warn";
+              ticketVerdict = "A primeira venda não paga a conquista. O retorno precisa vir nas próximas.";
+            }
+          }
+
+          var cacTone = "neutral";
+          var cacVerdict = "Informe clientes novos e o gasto para conquistá-los.";
+          if (newCustomers > 0) {
+            if (acquisitionSpend === 0) {
+              cacTone = "good";
+              cacVerdict = "Clientes novos chegaram sem gasto direto de aquisição.";
+            } else if (cac !== null && ticket !== null && cac > ticket * 3) {
+              cacTone = "bad";
+              cacVerdict = "Está caro demais perto do que cada venda deixa entrar.";
+            } else if (cac !== null && ticket !== null && cac > ticket) {
+              cacTone = "warn";
+              cacVerdict = "Cada cliente novo custa mais do que a primeira compra.";
+            } else {
+              cacTone = "good";
+              cacVerdict = "O custo para trazer um cliente cabe na primeira venda.";
+            }
+          }
+
+          var ltvTone = "neutral";
+          var ltvVerdict = "Informe ticket, frequência e tempo de relacionamento.";
+          if (ltvCac !== null) {
+            if (ltvCac >= 3) {
+              ltvTone = "good";
+              ltvVerdict = "Cada real gasto para conquistar volta pelo menos três vezes.";
+            } else if (ltvCac >= 1) {
+              ltvTone = "warn";
+              ltvVerdict = "O cliente se paga, mas a folga é curta. Retenção importa mais que anúncio.";
+            } else {
+              ltvTone = "bad";
+              ltvVerdict = "O cliente vale menos do que custa trazer. O crescimento consome caixa.";
+            }
+          } else if (ltv !== null && (cac === null || cac === 0)) {
+            ltvTone = "good";
+            ltvVerdict = "Há valor no relacionamento. Falta só comparar com o custo de aquisição.";
+          }
+
+          return [
+            {
+              id: "faturamento",
+              index: "01",
+              name: "Faturamento",
+              question: "Quanto o negócio movimentou?",
+              formula: "Soma de tudo que foi vendido no período.",
+              value: hasRevenue ? money(revenue) : "—",
+              detail:
+                goal > 0 && hasRevenue
+                  ? pct.format(revenue / goal) + " da meta de " + money(goal)
+                  : "Meta ainda não definida",
+              verdict: !hasRevenue
+                ? "Comece pelo total vendido no mês."
+                : goal <= 0
+                  ? "Número registrado. Defina uma meta para saber se é pouco ou muito."
+                  : revenue >= goal
+                    ? "A meta do mês foi alcançada."
+                    : revenue >= goal * 0.85
+                      ? "Perto da meta. Um ajuste de ticket ou de volume fecha o mês."
+                      : "Abaixo da meta. Olhe volume, ticket e o que travou as vendas.",
+              tone: revenueTone,
+              note: "Faturamento é movimento, não lucro. Uma empresa pode vender muito e sobrar pouco.",
+            },
+            {
+              id: "margem",
+              index: "02",
+              name: "Margem de lucro",
+              question: "Quanto sobra de verdade?",
+              formula: "(Faturamento − custos − despesas) ÷ faturamento",
+              value: netMargin === null ? "—" : pct.format(netMargin),
+              detail: hasRevenue ? money(net) + " de lucro líquido" : "Sem faturamento para medir",
+              verdict:
+                netMargin === null
+                  ? "Preencha faturamento, custo e despesas."
+                  : netMargin >= 0.15
+                    ? "A margem está folgada para um negócio enxuto."
+                    : netMargin >= 0.05
+                      ? "Sobra alguma coisa, mas qualquer custo extra aperta."
+                      : net < 0
+                        ? "O mês fechou no prejuízo."
+                        : "Quase empata. O negócio trabalha para ficar no zero.",
+              tone: marginTone,
+              note: "Acima de 15% é uma leitura confortável. Entre 5% e 15%, atenção. Abaixo disso, o modelo pede revisão.",
+            },
+            {
+              id: "caixa",
+              index: "03",
+              name: "Fluxo de caixa",
+              question: "O dinheiro entrou ou só a venda?",
+              formula: "Dinheiro que entrou − dinheiro que saiu",
+              value: cashIn > 0 || cashOut > 0 ? money(cash) : "—",
+              detail:
+                cashIn > 0 || cashOut > 0
+                  ? money(cashIn) + " entrou · " + money(cashOut) + " saiu"
+                  : "Caixa ainda em branco",
+              verdict: cashVerdict,
+              tone: cashTone,
+              note: "Venda a prazo vira faturamento hoje e caixa só depois. Conta no banco e lucro no papel não são a mesma coisa.",
+            },
+            {
+              id: "equilibrio",
+              index: "04",
+              name: "Ponto de equilíbrio",
+              question: "Quanto precisa vender para não perder?",
+              formula: "Despesas ÷ margem de contribuição",
+              value: breakEven === null ? "—" : money(breakEven),
+              detail:
+                grossMargin === null
+                  ? "Margem de contribuição indefinida"
+                  : "Contribuição de " + pct.format(grossMargin) + " depois do custo direto",
+              verdict: evenVerdict,
+              tone: evenTone,
+              note: "Aqui as despesas do mês são tratadas como fixas e o custo do vendido como variável. É a leitura mais útil para quem ainda não separa os dois.",
+            },
+            {
+              id: "ticket",
+              index: "05",
+              name: "Ticket médio",
+              question: "Quanto vale cada venda?",
+              formula: "Faturamento ÷ número de vendas",
+              value: ticket === null ? "—" : money(ticket, true),
+              detail: sales > 0 ? num.format(sales) + " vendas no período" : "Sem contagem de vendas",
+              verdict: ticketVerdict,
+              tone: ticketTone,
+              note: "Antes de correr atrás de mais clientes, veja se cada venda já carrega um valor que paga o esforço.",
+            },
+            {
+              id: "cac",
+              index: "06",
+              name: "Custo de aquisição",
+              question: "Quanto custa um cliente novo?",
+              formula: "Gasto de conquista ÷ clientes novos",
+              value: cac === null ? "—" : money(cac, true),
+              detail:
+                newCustomers > 0
+                  ? num.format(newCustomers) + " clientes novos · " + money(acquisitionSpend) + " investidos"
+                  : "Nenhum cliente novo informado",
+              verdict: cacVerdict,
+              tone: cacTone,
+              note: "Some anúncio, comissão e o que você gasta só para a pessoa comprar a primeira vez. Salário fixo da equipe fica nas despesas.",
+            },
+            {
+              id: "ltv",
+              index: "07",
+              name: "Valor do cliente",
+              question: "O relacionamento paga a conquista?",
+              formula: "Ticket × compras por ano × anos × comparação com o CAC",
+              value: ltv === null ? "—" : money(ltv),
+              detail:
+                ltvCac !== null
+                  ? num.format(ltvCac) +
+                    "× o custo de aquisição" +
+                    (profitLtv !== null ? " · " + money(profitLtv) + " depois do custo direto" : "")
+                  : ltv !== null
+                    ? "LTV de receita, ainda sem CAC para comparar"
+                    : "Faltam frequência ou tempo de permanência",
+              verdict: ltvVerdict,
+              tone: ltvTone,
+              note: "Uma relação saudável devolve pelo menos 3 vezes o que custou trazer o cliente. Abaixo de 1, crescer só acelera o prejuízo.",
+            },
+          ];
+        }
+
+        /* ---------------- state ---------------- */
+        var memoryStore = null;
+        var storageOK = true;
+        try {
+          window.localStorage.setItem("__se7e_test__", "1");
+          window.localStorage.removeItem("__se7e_test__");
+        } catch (err) {
+          storageOK = false;
+        }
+        function readStorage() {
+          if (!storageOK) return memoryStore;
+          try {
+            var raw = window.localStorage.getItem(STORAGE_KEY);
+            return raw ? JSON.parse(raw) : null;
+          } catch (err) {
+            return null;
+          }
+        }
+        function writeStorage(payload) {
+          memoryStore = payload;
+          if (!storageOK) return;
+          try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+          } catch (err) {
+            /* ignore */
+          }
+        }
+
+        function blankFields() {
+          var out = {};
+          FIELDS.forEach(function (f) {
+            out[f.key] = "";
+          });
+          return out;
+        }
+
+        function fieldsFrom(inputs) {
+          var next = blankFields();
+          Object.keys(next).forEach(function (key) {
+            next[key] = formatInput(inputs[key]);
+          });
+          return next;
+        }
+
+        function toInputs(fields) {
+          var out = {};
+          FIELDS.forEach(function (f) {
+            out[f.key] = parseLoose(fields[f.key]);
+          });
+          return out;
+        }
+
+        var state = {
+          fields: fieldsFrom(EXAMPLE),
+          tracked: [],
+          notes: { reading: "", decision: "", watch: "" },
+          usingExample: true,
+        };
+
+        /* ---------------- elements ---------------- */
+        var el = {
+          fields: document.getElementById("fields"),
+          cards: document.getElementById("cards"),
+          chips: document.getElementById("chips"),
+          track: document.getElementById("track"),
+          splitBar: document.getElementById("split-bar"),
+          splitRevenue: document.getElementById("split-revenue"),
+          legendCogs: document.getElementById("legend-cogs"),
+          legendExpenses: document.getElementById("legend-expenses"),
+          legendProfit: document.getElementById("legend-profit"),
+          numbersHint: document.getElementById("numbers-hint"),
+          scoreHealthy: document.getElementById("score-healthy"),
+          scoreFilled: document.getElementById("score-filled"),
+          scoreText: document.getElementById("score-text"),
+          scoreTrack: document.getElementById("score-track"),
+          btnExample: document.getElementById("btn-example"),
+          btnClear: document.getElementById("btn-clear"),
+          noteReading: document.getElementById("note-reading"),
+          noteDecision: document.getElementById("note-decision"),
+          noteWatch: document.getElementById("note-watch"),
+        };
+
+        /* ---------------- build fields ---------------- */
+        var inputByKey = {};
+        FIELDS.forEach(function (field) {
+          var label = document.createElement("label");
+          label.className = "field";
+
+          var name = document.createElement("span");
+          name.className = "f-label";
+          name.textContent = field.label;
+
+          var hint = document.createElement("span");
+          hint.className = "f-hint";
+          hint.textContent = field.hint;
+
+          var row = document.createElement("span");
+          row.className = "f-input";
+          if (field.money) {
+            var symbol = document.createElement("span");
+            symbol.className = "f-money";
+            symbol.textContent = "R$";
+            row.appendChild(symbol);
+          }
+
+          var input = document.createElement("input");
+          input.type = "text";
+          input.inputMode = "decimal";
+          input.autocomplete = "off";
+          input.placeholder = "0";
+          input.setAttribute("aria-label", field.label);
+          input.addEventListener("input", function (event) {
+            state.usingExample = false;
+            state.fields[field.key] = event.target.value;
+            render();
+          });
+          inputByKey[field.key] = input;
+          row.appendChild(input);
+
+          label.appendChild(name);
+          label.appendChild(hint);
+          label.appendChild(row);
+          el.fields.appendChild(label);
+        });
+
+        /* ---------------- build track ---------------- */
+        TRACK_ITEMS.forEach(function (item) {
+          var li = document.createElement("li");
+          var button = document.createElement("button");
+          button.type = "button";
+          button.dataset.id = item.id;
+          button.setAttribute("aria-pressed", "false");
+
+          var check = document.createElement("span");
+          check.className = "check";
+          check.setAttribute("aria-hidden", "true");
+
+          var text = document.createElement("span");
+          text.textContent = item.label;
+
+          button.appendChild(check);
+          button.appendChild(text);
+          button.addEventListener("click", function () {
+            var idx = state.tracked.indexOf(item.id);
+            if (idx === -1) state.tracked.push(item.id);
+            else state.tracked.splice(idx, 1);
+            render();
+          });
+          li.appendChild(button);
+          el.track.appendChild(li);
+        });
+
+        el.btnExample.addEventListener("click", function () {
+          state.fields = fieldsFrom(EXAMPLE);
+          state.usingExample = true;
+          render();
+        });
+
+        el.btnClear.addEventListener("click", function () {
+          state.fields = blankFields();
+          state.usingExample = false;
+          render();
+        });
+
+        el.noteReading.addEventListener("input", function (e) {
+          state.notes.reading = e.target.value;
+          persist();
+        });
+        el.noteDecision.addEventListener("input", function (e) {
+          state.notes.decision = e.target.value;
+          persist();
+        });
+        el.noteWatch.addEventListener("input", function (e) {
+          state.notes.watch = e.target.value;
+          persist();
+        });
+
+        function persist() {
+          writeStorage({ fields: state.fields, tracked: state.tracked, notes: state.notes });
+        }
+
+        /* ---------------- render ---------------- */
+        function render() {
+          FIELDS.forEach(function (field) {
+            var input = inputByKey[field.key];
+            if (input !== document.activeElement) input.value = state.fields[field.key];
+          });
+
+          el.numbersHint.textContent = state.usingExample
+            ? "Exemplo: Ateliê Luz, um estúdio pequeno. Apague e coloque a sua realidade."
+            : "Salvo neste navegador. Só você vê.";
+
+          var inputs = toInputs(state.fields);
+          var indicators = analyze(inputs);
+
+          renderSplit(inputs);
+          renderReading(indicators);
+          renderScore(inputs, indicators);
+
+          Array.prototype.forEach.call(el.track.querySelectorAll("button"), function (button) {
+            var on = state.tracked.indexOf(button.dataset.id) !== -1;
+            button.setAttribute("aria-pressed", on ? "true" : "false");
+            button.querySelector(".check").textContent = on ? "✓" : "";
+          });
+
+          persist();
+        }
+
+        function renderSplit(inputs) {
+          var gross = Math.max(inputs.revenue - inputs.cogs, 0);
+          var expensesShare = inputs.revenue > 0 ? Math.min(inputs.expenses, inputs.revenue) : 0;
+          var cogsShare = inputs.revenue > 0 ? Math.min(inputs.cogs, inputs.revenue) : 0;
+          var profitShare = Math.max(inputs.revenue - cogsShare - expensesShare, 0);
+          var loss = inputs.cogs + inputs.expenses > inputs.revenue && inputs.revenue > 0;
+
+          el.splitRevenue.textContent = inputs.revenue > 0 ? money(inputs.revenue) : "sem faturamento";
+
+          while (el.splitBar.firstChild) el.splitBar.removeChild(el.splitBar.firstChild);
+          if (inputs.revenue > 0) {
+            var cogsBar = document.createElement("i");
+            cogsBar.className = "bg-sand";
+            cogsBar.style.width = (cogsShare / inputs.revenue) * 100 + "%";
+            var expBar = document.createElement("i");
+            expBar.className = "bg-brass";
+            expBar.style.width = (expensesShare / inputs.revenue) * 100 + "%";
+            el.splitBar.appendChild(cogsBar);
+            el.splitBar.appendChild(expBar);
+            if (!loss) {
+              var profitBar = document.createElement("i");
+              profitBar.className = "bg-forest";
+              profitBar.style.width = (profitShare / inputs.revenue) * 100 + "%";
+              el.splitBar.appendChild(profitBar);
+            }
+          }
+
+          el.legendCogs.textContent =
+            "Custo direto" + (inputs.revenue > 0 ? " " + money(inputs.cogs) : "");
+          el.legendExpenses.textContent =
+            "Despesas" + (inputs.revenue > 0 ? " " + money(inputs.expenses) : "");
+          el.legendProfit.textContent = loss
+            ? "Prejuízo de " + money(inputs.cogs + inputs.expenses - inputs.revenue)
+            : "Sobra " + money(gross - inputs.expenses);
+        }
+
+        function renderReading(indicators) {
+          while (el.chips.firstChild) el.chips.removeChild(el.chips.firstChild);
+          while (el.cards.firstChild) el.cards.removeChild(el.cards.firstChild);
+
+          indicators.forEach(function (item) {
+            var chip = document.createElement("a");
+            chip.className = "chip";
+            chip.href = "#" + item.id;
+            var idx = document.createElement("span");
+            idx.className = "idx";
+            idx.textContent = item.index;
+            chip.appendChild(idx);
+            chip.appendChild(document.createTextNode(" " + item.name));
+            el.chips.appendChild(chip);
+
+            var card = document.createElement("article");
+            card.className = "card";
+            card.id = item.id;
+
+            var head = document.createElement("div");
+            head.className = "c-head";
+            var index = document.createElement("p");
+            index.className = "c-index";
+            index.textContent = item.index;
+            var title = document.createElement("h3");
+            title.textContent = item.name;
+            var question = document.createElement("p");
+            question.className = "c-question";
+            question.textContent = item.question;
+            head.appendChild(index);
+            head.appendChild(title);
+            head.appendChild(question);
+
+            var body = document.createElement("div");
+            var valueRow = document.createElement("div");
+            valueRow.className = "value-row";
+            var value = document.createElement("p");
+            value.className = "big";
+            value.textContent = item.value;
+            var badge = document.createElement("span");
+            badge.className = "badge badge-" + item.tone;
+            badge.textContent = TONE_LABEL[item.tone];
+            valueRow.appendChild(value);
+            valueRow.appendChild(badge);
+
+            var detail = document.createElement("p");
+            detail.className = "c-detail";
+            detail.textContent = item.detail;
+
+            var verdict = document.createElement("p");
+            verdict.className = "c-verdict";
+            verdict.textContent = item.verdict;
+
+            var note = document.createElement("p");
+            note.className = "c-note";
+            note.textContent = item.note;
+
+            var formula = document.createElement("p");
+            formula.className = "c-formula";
+            formula.textContent = item.formula;
+
+            body.appendChild(valueRow);
+            body.appendChild(detail);
+            body.appendChild(verdict);
+            body.appendChild(note);
+            body.appendChild(formula);
+
+            card.appendChild(head);
+            card.appendChild(body);
+            el.cards.appendChild(card);
+          });
+        }
+
+        function renderScore(inputs, indicators) {
+          var filled = indicators.filter(function (i) { return i.tone !== "neutral"; }).length;
+          var healthy = indicators.filter(function (i) { return i.tone === "good"; }).length;
+
+          el.scoreHealthy.textContent = String(healthy);
+          el.scoreFilled.textContent = String(filled || 7);
+          el.scoreText.textContent =
+            filled === 0
+              ? "O exemplo do Ateliê Luz já está carregado. Troque pelos seus números."
+              : healthy +
+                (healthy === 1 ? " indicador em caminho saudável, de " : " indicadores em caminho saudável, de ") +
+                filled +
+                (filled === 1 ? " preenchido." : " preenchidos.");
+          el.scoreTrack.textContent =
+            "Você marca acompanhar " + state.tracked.length + " de 7.";
+        }
+
+        /* ---------------- boot ---------------- */
+        (function init() {
+          var saved = readStorage();
+          if (saved) {
+            if (saved.fields) {
+              var merged = blankFields();
+              Object.keys(merged).forEach(function (key) {
+                if (typeof saved.fields[key] === "string") merged[key] = saved.fields[key];
+              });
+              state.fields = merged;
+            }
+            if (Array.isArray(saved.tracked)) state.tracked = saved.tracked.filter(function (id) {
+              return TRACK_ITEMS.some(function (item) { return item.id === id; });
+            });
+            if (saved.notes) {
+              state.notes = {
+                reading: saved.notes.reading || "",
+                decision: saved.notes.decision || "",
+                watch: saved.notes.watch || "",
+              };
+            }
+            state.usingExample = false;
+          }
+
+          el.noteReading.value = state.notes.reading;
+          el.noteDecision.value = state.notes.decision;
+          el.noteWatch.value = state.notes.watch;
+
+          render();
+        })();
+      })();
+    </script>
+  </body>
+</html>
